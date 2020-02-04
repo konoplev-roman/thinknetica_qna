@@ -1,0 +1,11 @@
+require: rubocop-rails
+AllCops:
+  Exclude:
+    - 'bin/**/*'
+    - 'tmp/**/*'
+    - 'db/schema.rb'
+    - 'db/migrate/*'
+Layout/LineLength:
+  Max: 120
+Style/Documentation:
+  Enabled: false
