@@ -37,9 +37,9 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'PATCH #update' do
     context 'with valid attributes' do
-      it 'changes question attributes' do
-        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }
+      before { patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } } }
 
+      it 'changes question attributes' do
         question.reload
 
         expect(question.title).to eq('new title')
@@ -47,8 +47,6 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'redirects to updated question' do
-        patch :update, params: { id: question, question: attributes_for(:question) }
-
         expect(response).to redirect_to question
       end
     end
