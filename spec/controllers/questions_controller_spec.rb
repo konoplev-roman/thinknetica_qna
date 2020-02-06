@@ -14,7 +14,9 @@ RSpec.describe QuestionsController, type: :controller do
       it 'redirects to show view' do
         post :create, params: { question: attributes_for(:question) }
 
-        expect(response).to redirect_to assigns(:exposed_question)
+        created_question = Question.order(id: :desc).first
+
+        expect(response).to redirect_to created_question
       end
     end
 
@@ -35,12 +37,6 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'PATCH #update' do
     context 'with valid attributes' do
-      it 'assigns the requested question to @question' do
-        patch :update, params: { id: question, question: attributes_for(:question) }
-
-        expect(assigns[:exposed_question]).to eq(question)
-      end
-
       it 'changes question attributes' do
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }
 

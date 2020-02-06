@@ -7,12 +7,6 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #create' do
     context 'with valid attributes' do
-      it 'assigns a new answer nested to to the selected question' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
-
-        expect(assigns[:exposed_answer].question).to eq(question)
-      end
-
       it 'saves a new answer in the database' do
         expected = expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }
 
