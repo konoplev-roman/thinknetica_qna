@@ -13,6 +13,14 @@ RSpec.describe AnswersController, type: :controller do
         expected.to change(Answer, :count).by(1)
       end
 
+      it 'saves a new answer nested to the selected question' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+
+        created_answer = Answer.order(id: :desc).first
+
+        expect(created_answer.question).to eq(question)
+      end
+
       it 'redirects to index view' do
         post :create, params: { question_id: question, answer: attributes_for(:answer) }
 
