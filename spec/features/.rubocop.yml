@@ -1,0 +1,8 @@
+inherit_from: ../../.rubocop.yml
+RSpec/ExampleLength:
+  Max: 15
+RSpec/MultipleExpectations:
+  Max: 10
+Metrics/BlockLength:
+  ExcludedMethods:
+    - feature

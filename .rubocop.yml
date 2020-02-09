@@ -16,3 +16,9 @@ Metrics/BlockLength:
     - 'describe'
 Style/BlockDelimiters:
   EnforcedStyle: braces_for_chaining
+Capybara/FeatureMethods:
+  EnabledMethods:
+    - feature
+    - scenario
+    - background
+    - given
