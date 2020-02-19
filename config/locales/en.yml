@@ -1,2 +1,31 @@
 en:
   title: "QnA"
+  activerecord:
+    models:
+      question:
+        one: "Question"
+        other: "Questions"
+    attributes:
+      question:
+        title: "Title"
+        body: "Body"
+  helpers:
+    submit:
+      question:
+        create: "Ask"
+    label:
+      question:
+        title: "Title"
+        body: "Body"
+  questions:
+    index:
+      ask_new_question: "Ask question"
+    create:
+      success: "Your question successfully created!"
+    new:
+      create: "Create new question"
+  shared:
+    errors:
+      header:
+        one: "%{count} error detected!"
+        other: "%{count} errors detected!"

@@ -6,7 +6,7 @@ class QuestionsController < ApplicationController
 
   def create
     if question.save
-      redirect_to question
+      redirect_to question, notice: t('.success')
     else
       render :new
     end
