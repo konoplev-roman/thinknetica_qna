@@ -63,6 +63,7 @@ end
 group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 2.15'
+  gem 'launchy'
   gem 'rails-controller-testing'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
