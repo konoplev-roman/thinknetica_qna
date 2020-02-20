@@ -5,18 +5,27 @@ en:
       question:
         one: "Question"
         other: "Questions"
+      answer:
+        one: "Answer"
+        other: "Answers"
     attributes:
       question:
         title: "Title"
         body: "Body"
+      answer:
+        body: "Answer"
   helpers:
     submit:
       question:
         create: "Ask"
+      answer:
+        create: "Post Your Answer"
     label:
       question:
         title: "Title"
         body: "Body"
+      answer:
+        body: "Answer"
   questions:
     index:
       ask_new_question: "Ask question"
@@ -24,6 +33,9 @@ en:
       success: "Your question successfully created!"
     new:
       create: "Create new question"
+  answers:
+    create:
+      success: "Your answer has been published successfully!"
   shared:
     errors:
       header:

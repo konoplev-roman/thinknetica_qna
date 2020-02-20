@@ -3,6 +3,7 @@
 class QuestionsController < ApplicationController
   expose :questions, -> { Question.all }
   expose :question
+  expose :answer, -> { question.answers.new }
 
   def create
     if question.save

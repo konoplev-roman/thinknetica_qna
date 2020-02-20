@@ -3,4 +3,6 @@ div class='my-3 p-3 bg-white rounded shadow-sm'
 
   p= question.body
 
-  == render question.answers
+  == render question.answers.reload
+
+  == render 'answers/from'
