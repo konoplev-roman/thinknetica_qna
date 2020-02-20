@@ -7,7 +7,7 @@ class AnswersController < ApplicationController
 
   def create
     if answer.save
-      redirect_to question_answers_path(question)
+      redirect_to question
     else
       render :new
     end

@@ -21,10 +21,10 @@ RSpec.describe AnswersController, type: :controller do
         expect(created_answer.question).to eq(question)
       end
 
-      it 'redirects to index view' do
+      it 'redirects to show question view' do
         post :create, params: { question_id: question, answer: attributes_for(:answer) }
 
-        expect(response).to redirect_to question_answers_path(question)
+        expect(response).to redirect_to question
       end
     end
 
