@@ -41,3 +41,7 @@ en:
       header:
         one: "%{count} error detected!"
         other: "%{count} errors detected!"
+  nav:
+    root: "QnA"
+    signup: "Signup"
+  back: "Back"
