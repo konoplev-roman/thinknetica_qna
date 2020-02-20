@@ -44,4 +44,5 @@ en:
   nav:
     root: "QnA"
     signup: "Signup"
+    login: "Login"
   back: "Back"
