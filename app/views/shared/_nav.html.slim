@@ -3,5 +3,11 @@ nav class='navbar navbar-expand-lg navbar-light bg-light'
     li class='nav-item' = link_to t('nav.root'), root_path, class: 'navbar-brand'
 
   ul class='navbar-nav'
-    li class='nav-item' = link_to t('nav.signup'), new_user_registration_path, class: 'nav-link'
-    li class='nav-item' = link_to t('nav.login'), new_user_session_path, class: 'nav-link'
+    - if user_signed_in?
+      li class='nav-item dropdown'
+        a class='nav-link dropdown-toggle' data-toggle='dropdown' href='#' role='button' aria-haspopup='true' aria-expanded='false' = current_user.email
+        div class='dropdown-menu'
+          = link_to t('nav.logout'), destroy_user_session_path, method: :delete, class: 'dropdown-item'
+    - else
+      li class='nav-item' = link_to t('nav.signup'), new_user_registration_path, class: 'nav-link'
+      li class='nav-item' = link_to t('nav.login'), new_user_session_path, class: 'nav-link'

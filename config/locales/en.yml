@@ -43,6 +43,7 @@ en:
         other: "%{count} errors detected!"
   nav:
     root: "QnA"
+    logout: "Logout"
     signup: "Signup"
     login: "Login"
   back: "Back"
