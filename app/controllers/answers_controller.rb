@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, only: %i[create]
+  before_action :authenticate_user!
 
   expose :question
   expose :answers, from: :question
@@ -11,6 +11,16 @@ class AnswersController < ApplicationController
     answer.user = current_user
 
     if answer.save
+      redirect_to question, notice: t('.success')
+    else
+      render 'questions/show'
+    end
+  end
+
+  def destroy
+    if answer.user == current_user
+      answer.destroy
+
       redirect_to question, notice: t('.success')
     else
       render 'questions/show'

@@ -3,13 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
+  let(:user) { create(:user) }
   let(:question) { create(:question) }
 
+  before { login(user) }
+
   describe 'POST #create' do
-    let(:user) { create(:user) }
-
-    before { login(user) }
-
     context 'with valid attributes' do
       it 'saves a new answer in the database' do
         expect {
@@ -49,6 +48,36 @@ RSpec.describe AnswersController, type: :controller do
 
       it 're-renders show question view' do
         post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }
+
+        expect(response).to render_template 'questions/show'
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    context 'with own answer' do
+      let!(:answer) { create(:answer, user: user, question: question) }
+
+      it 'deletes the answer' do
+        expect { delete :destroy, params: { question_id: question, id: answer } }.to change(Answer, :count).by(-1)
+      end
+
+      it 'redirects to show question view' do
+        delete :destroy, params: { question_id: question, id: answer }
+
+        expect(response).to redirect_to question
+      end
+    end
+
+    context 'with someone else\'s answer' do
+      let!(:answer) { create(:answer, question: question) }
+
+      it 'does not delete the answer' do
+        expect { delete :destroy, params: { question_id: question, id: answer } }.not_to change(Answer, :count)
+      end
+
+      it 're-renders show question view' do
+        delete :destroy, params: { question_id: question, id: answer }
 
         expect(response).to render_template 'questions/show'
       end

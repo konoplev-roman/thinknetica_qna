@@ -38,6 +38,8 @@ en:
   answers:
     create:
       success: "Your answer has been published successfully!"
+    destroy:
+      success: "Your answer successfully removed!"
   shared:
     errors:
       header:
