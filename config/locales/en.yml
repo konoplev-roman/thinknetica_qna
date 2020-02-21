@@ -33,6 +33,8 @@ en:
       success: "Your question successfully created!"
     new:
       create: "Create new question"
+    destroy:
+      success: "Your question successfully removed!"
   answers:
     create:
       success: "Your answer has been published successfully!"
@@ -47,3 +49,5 @@ en:
     signup: "Signup"
     login: "Login"
   back: "Back"
+  delete: "Delete"
+  are_you_sure: "Are you sure?"

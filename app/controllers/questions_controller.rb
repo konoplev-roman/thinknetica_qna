@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, only: %i[new create]
+  before_action :authenticate_user!, only: %i[new create destroy]
 
   expose :questions, -> { Question.all }
   expose :question
@@ -30,9 +30,13 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    question.destroy
+    if question.user == current_user
+      question.destroy
 
-    redirect_to questions_path
+      redirect_to questions_path, notice: t('.success')
+    else
+      render :show
+    end
   end
 
   private
