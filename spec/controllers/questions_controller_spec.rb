@@ -3,12 +3,22 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:question) { create(:question) }
-
   describe 'POST #create' do
+    let(:user) { create(:user) }
+
+    before { login(user) }
+
     context 'with valid attributes' do
       it 'saves a new question in the database' do
         expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
+      end
+
+      it 'saves a new question nested to the current user' do
+        post :create, params: { question: attributes_for(:question) }
+
+        created_question = Question.order(id: :desc).first
+
+        expect(created_question.user).to eq(user)
       end
 
       it 'redirects to show view' do
@@ -36,6 +46,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    let(:question) { create(:question) }
+
     context 'with valid attributes' do
       before { patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } } }
 

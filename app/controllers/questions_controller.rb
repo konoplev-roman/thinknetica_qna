@@ -1,11 +1,19 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
+  before_action :authenticate_user!, only: %i[new create]
+
   expose :questions, -> { Question.all }
   expose :question
   expose :answer, -> { question.answers.new }
 
+  # This is a stub, used for indexing in before_action :authenticate_user!
+  # Redefined in Decent Exposure
+  def new; end
+
   def create
+    question.user = current_user
+
     if question.save
       redirect_to question, notice: t('.success')
     else
