@@ -6,11 +6,23 @@ RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question) }
 
   describe 'POST #create' do
+    let(:user) { create(:user) }
+
+    before { login(user) }
+
     context 'with valid attributes' do
       it 'saves a new answer in the database' do
         expect {
           post :create, params: { question_id: question, answer: attributes_for(:answer) }
         }.to change(Answer, :count).by(1)
+      end
+
+      it 'saves a new answer nested to the crrent user' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+
+        created_answer = Answer.order(id: :desc).first
+
+        expect(created_answer.user).to eq(user)
       end
 
       it 'saves a new answer nested to the selected question' do

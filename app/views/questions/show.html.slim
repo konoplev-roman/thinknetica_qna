@@ -5,4 +5,5 @@ div class='my-3 p-3 bg-white rounded shadow-sm'
 
   == render question.answers.reload
 
-  == render 'answers/from'
+  - if user_signed_in?
+    == render 'answers/from'
