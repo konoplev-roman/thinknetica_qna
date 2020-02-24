@@ -4,5 +4,5 @@ class Question < ApplicationRecord
   belongs_to :user
   has_many :answers, dependent: :destroy
 
-  validates :user, :title, :body, presence: true
+  validates :title, :body, presence: true
 end
