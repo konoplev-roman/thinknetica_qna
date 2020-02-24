@@ -8,7 +8,7 @@ div class='my-3 p-3 bg-white rounded shadow-sm'
 
   p= question.body
 
-  == render question.answers.reload
+  == render question.answers.reject(&:new_record?)
 
   - if user_signed_in?
     == render 'answers/from'
