@@ -1,7 +1,7 @@
 div class='card mb-3'
   div class='card-body'
     p class='card-text' = answer.body
-    - if answer.user == current_user
+    - if answer.author?(current_user)
       = link_to t('delete'), question_answer_path(question, answer), \
                 method: :delete, data: { confirm: t('are_you_sure') }, \
                 class: 'btn btn-danger btn-sm'

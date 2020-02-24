@@ -5,4 +5,8 @@ class Answer < ApplicationRecord
   belongs_to :question
 
   validates :question, :body, presence: true
+
+  def author?(author)
+    user == author
+  end
 end
