@@ -9,11 +9,20 @@ feature 'User can logout', %(
 ) do
   given(:user) { create(:user) }
 
-  background { login(user) }
+  scenario 'Authorized user can logout' do
+    login(user)
 
-  scenario 'Authorized user tries to logout' do
     click_on 'Logout'
 
+    expect(page).to have_current_path(root_path)
+
     expect(page).to have_content 'Signed out successfully.'
+    expect(page).to have_content 'Login'
+  end
+
+  scenario 'Guest does not see the logout link' do
+    visit root_path
+
+    expect(page).to have_no_content 'Logout'
   end
 end

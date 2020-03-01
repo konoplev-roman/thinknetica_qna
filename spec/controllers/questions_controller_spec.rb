@@ -6,9 +6,23 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'POST #create' do
     let(:user) { create(:user) }
 
-    before { login(user) }
+    context 'without authentication' do
+      it 'does not save the question' do
+        expect {
+          post :create, params: { question: attributes_for(:question) }
+        }.not_to change(Question, :count)
+      end
+
+      it 're-renders show login view' do
+        post :create, params: { question: attributes_for(:question) }
+
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
 
     context 'with valid attributes' do
+      before { login(user) }
+
       it 'saves a new question in the database' do
         expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
       end
@@ -31,6 +45,8 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with invalid attributes' do
+      before { login(user) }
+
       it 'does not save the question' do
         expect {
           post :create, params: { question: attributes_for(:question, :invalid) }
@@ -92,9 +108,23 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'DELETE #destroy' do
     let(:user) { create(:user) }
 
-    before { login(user) }
+    context 'without authentication' do
+      let!(:question) { create(:question) }
+
+      it 'does not delete the question' do
+        expect { delete :destroy, params: { id: question } }.not_to change(Question, :count)
+      end
+
+      it 're-renders show login view' do
+        delete :destroy, params: { id: question }
+
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
 
     context 'with own question' do
+      before { login(user) }
+
       let!(:question) { create(:question, user: user) }
 
       it 'deletes the question' do
@@ -109,6 +139,8 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with someone else\'s question' do
+      before { login(user) }
+
       let!(:question) { create(:question) }
 
       it 'does not delete the question' do

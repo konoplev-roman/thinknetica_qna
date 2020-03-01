@@ -15,13 +15,15 @@ feature 'User can view the question and list of answers for this', %(
     visit question_path(question)
   end
 
-  scenario 'view the question' do
+  scenario 'User can view the question' do
     expect(page).to have_content 'Title of the question'
     expect(page).to have_content 'Content of the question'
   end
 
-  scenario 'view the list of answers' do
+  scenario 'User can view a list of answers to the question' do
     expect(page).to have_content 'Content of the first answer'
     expect(page).to have_content 'Content of the second answer'
+
+    expect(page).to have_css('.card', count: 2)
   end
 end

@@ -14,12 +14,14 @@ feature 'User can delete answer', %(
 
     background { login(user) }
 
-    scenario 'remove own answer' do
+    scenario 'can delete their answer' do
       create(:answer, user: user, question: question, body: 'Content of the my answer')
 
       visit question_path(question)
 
-      click_on 'Delete'
+      within '.card' do
+        click_on 'Delete'
+      end
 
       expect(page).to have_content 'Your answer successfully removed!'
 
@@ -28,22 +30,26 @@ feature 'User can delete answer', %(
       expect(page).to have_no_content 'Content of the my answer'
     end
 
-    scenario 'tries to remove someone else\'s answer' do
+    scenario 'does not see the link to delete someone else\'s answer' do
       create(:answer, question: question)
 
       visit question_path(question)
 
-      expect(page).to have_no_content 'Delete'
+      within '.card' do
+        expect(page).to have_no_content 'Delete'
+      end
     end
   end
 
-  describe 'Unauthenticated user' do
-    scenario 'tries to remove someone else\'s answer' do
+  describe 'Guest' do
+    scenario 'does not see the link to delete a answer' do
       create(:answer, question: question)
 
       visit question_path(question)
 
-      expect(page).to have_no_content 'Delete'
+      within '.card' do
+        expect(page).to have_no_content 'Delete'
+      end
     end
   end
 end

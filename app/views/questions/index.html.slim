@@ -1,4 +1,5 @@
 div class='my-3 p-3 bg-white rounded shadow-sm'
   == render questions
 
-  = link_to t('.ask_new_question'), new_question_path, class: 'btn btn-primary btn-lg'
+  - if user_signed_in?
+    = link_to t('.ask_new_question'), new_question_path, class: 'btn btn-primary btn-lg'

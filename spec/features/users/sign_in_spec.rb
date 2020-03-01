@@ -9,23 +9,88 @@ feature 'User can sign in', %(
 ) do
   given(:user) { create(:user) }
 
-  background { visit new_user_session_path }
+  describe 'Guest' do
+    scenario 'can use the login link' do
+      visit root_path
 
-  scenario 'Registered user tries to sign in' do
-    fill_in 'Email', with: user.email
-    fill_in 'Password', with: user.password
+      click_on 'Login'
 
-    click_on 'Log in'
+      expect(page).to have_current_path(new_user_session_path)
+    end
 
-    expect(page).to have_content 'Signed in successfully.'
+    scenario 'can use the return back link' do
+      visit new_user_session_path
+
+      click_on 'Back'
+
+      expect(page).to have_current_path(root_path)
+    end
+
+    scenario 'can login with valid attributes' do
+      visit new_user_session_path
+
+      fill_in 'Email', with: user.email
+      fill_in 'Password', with: user.password
+
+      click_on 'Log in'
+
+      expect(page).to have_current_path(root_path)
+
+      expect(page).to have_content 'Signed in successfully.'
+      expect(page).to have_no_content 'Login'
+    end
+
+    describe 'cannot login' do
+      background { visit new_user_session_path }
+
+      scenario 'without filling in the login field' do
+        fill_in 'Password', with: user.password
+
+        click_on 'Log in'
+
+        expect(page).to have_current_path(user_session_path)
+
+        expect(page).to have_content 'Invalid Email or password.'
+      end
+
+      scenario 'without filling in the password field' do
+        fill_in 'Email', with: user.email
+
+        click_on 'Log in'
+
+        expect(page).to have_current_path(user_session_path)
+
+        expect(page).to have_content 'Invalid Email or password.'
+      end
+
+      scenario 'with invalid username and password' do
+        fill_in 'Email', with: user.email
+        fill_in 'Password', with: 'wrong password'
+
+        click_on 'Log in'
+
+        expect(page).to have_current_path(user_session_path)
+
+        expect(page).to have_content 'Invalid Email or password.'
+      end
+    end
   end
 
-  scenario 'Unregistered user tries to sign in' do
-    fill_in 'Email', with: 'wrong@example.com'
-    fill_in 'Password', with: '12345678'
+  describe 'Authenticated user' do
+    background { login(user) }
 
-    click_on 'Log in'
+    scenario 'does not see the login link' do
+      visit root_path
 
-    expect(page).to have_content 'Invalid Email or password.'
+      expect(page).to have_no_content 'Login'
+    end
+
+    scenario 'cannot login' do
+      visit new_user_session_path
+
+      expect(page).to have_current_path(root_path)
+
+      expect(page).to have_content 'You are already signed in.'
+    end
   end
 end

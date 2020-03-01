@@ -11,12 +11,12 @@ feature 'User can delete question', %(
 
   describe 'Authenticated user' do
     given(:user) { create(:user) }
-    given(:own_question) { create(:question, user: user, title: 'Title of the my question') }
+    given(:their_question) { create(:question, user: user, title: 'Title of the my question') }
 
     background { login(user) }
 
-    scenario 'remove own question' do
-      visit question_path(own_question)
+    scenario 'can delete their question' do
+      visit question_path(their_question)
 
       click_on 'Delete'
 
@@ -27,15 +27,15 @@ feature 'User can delete question', %(
       expect(page).to have_no_content 'Title of the my question'
     end
 
-    scenario 'tries to remove someone else\'s question' do
+    scenario 'does not see the link to delete someone else\'s question' do
       visit question_path(question)
 
       expect(page).to have_no_content 'Delete'
     end
   end
 
-  describe 'Unauthenticated user' do
-    scenario 'tries to remove someone else\'s question' do
+  describe 'Guest' do
+    scenario 'does not see the link to delete a question' do
       visit question_path(question)
 
       expect(page).to have_no_content 'Delete'

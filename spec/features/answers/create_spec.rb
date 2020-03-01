@@ -18,30 +18,32 @@ feature 'User can answer the question', %(
       visit question_path(question)
     end
 
-    scenario 'answer the question' do
+    scenario 'can answer the question with valid attributes' do
       fill_in 'Answer', with: 'Content of the answer'
 
       click_on 'Post Your Answer'
+
+      expect(page).to have_current_path(question_path(question))
 
       expect(page).to have_content 'Your answer has been published successfully!'
 
       expect(page).to have_content 'Content of the answer'
 
-      expect(page).to have_current_path(question_path(question))
+      expect(page).to have_css('.card', count: 1)
     end
 
-    scenario 'answer the question with errors' do
+    scenario 'cannot answer the question without filling in the answer field' do
       click_on 'Post Your Answer'
 
       expect(page).to have_content 'Answer can\'t be blank'
+
+      expect(page).to have_css('.card', count: 0)
     end
   end
 
-  describe 'Unauthenticated user' do
-    background { visit question_path(question) }
-
-    scenario 'tries to answer the question' do
-      expect(page).to have_no_field 'Answer'
+  describe 'Guest' do
+    scenario 'does not see the link to answer the question' do
+      visit question_path(question)
 
       expect(page).to have_no_content 'Post Your Answer'
     end

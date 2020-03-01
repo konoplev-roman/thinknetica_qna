@@ -6,10 +6,24 @@ RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question) }
 
-  before { login(user) }
-
   describe 'POST #create' do
+    context 'without authentication' do
+      it 'does not save the answer' do
+        expect {
+          post :create, params: { question_id: question, answer: attributes_for(:answer) }
+        }.not_to change(Answer, :count)
+      end
+
+      it 're-renders show login view' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+
     context 'with valid attributes' do
+      before { login(user) }
+
       it 'saves a new answer in the database' do
         expect {
           post :create, params: { question_id: question, answer: attributes_for(:answer) }
@@ -40,6 +54,8 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'with invalid attributes' do
+      before { login(user) }
+
       it 'does not save the answer' do
         expect {
           post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }
@@ -55,7 +71,23 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
+    context 'without authentication' do
+      let!(:answer) { create(:answer, question: question) }
+
+      it 'does not delete the answer' do
+        expect { delete :destroy, params: { question_id: question, id: answer } }.not_to change(Answer, :count)
+      end
+
+      it 're-renders show login view' do
+        delete :destroy, params: { question_id: question, id: answer }
+
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+
     context 'with own answer' do
+      before { login(user) }
+
       let!(:answer) { create(:answer, user: user, question: question) }
 
       it 'deletes the answer' do
@@ -70,6 +102,8 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'with someone else\'s answer' do
+      before { login(user) }
+
       let!(:answer) { create(:answer, question: question) }
 
       it 'does not delete the answer' do
