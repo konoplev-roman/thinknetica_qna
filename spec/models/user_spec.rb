@@ -10,17 +10,15 @@ RSpec.describe User, type: :model do
 
   describe '#author?' do
     let(:user) { create(:user) }
+    let(:own_resource) { create(:question, user: user) }
+    let(:other_resource) { create(:question) }
 
     it 'return true if the user is the author of the resource' do
-      resource = create(:question, user: user)
-
-      expect(user).to be_author(resource)
+      expect(user).to be_author(own_resource)
     end
 
     it 'return false if the user is not the author of the resource' do
-      resource = create(:question)
-
-      expect(user).not_to be_author(resource)
+      expect(user).not_to be_author(other_resource)
     end
   end
 end

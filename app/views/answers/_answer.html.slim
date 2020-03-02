@@ -1,4 +1,4 @@
-div class='card mb-3'
+div id="answer-#{answer.id}" class='card mb-3'
   div class='card-body'
     p class='card-text' = answer.body
     - if current_user&.author?(answer)
