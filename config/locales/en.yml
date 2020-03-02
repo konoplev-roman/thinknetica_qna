@@ -1,2 +1,55 @@
 en:
   title: "QnA"
+  activerecord:
+    models:
+      question:
+        one: "Question"
+        other: "Questions"
+      answer:
+        one: "Answer"
+        other: "Answers"
+    attributes:
+      question:
+        title: "Title"
+        body: "Body"
+      answer:
+        body: "Answer"
+  helpers:
+    submit:
+      question:
+        create: "Ask"
+      answer:
+        create: "Post Your Answer"
+    label:
+      question:
+        title: "Title"
+        body: "Body"
+      answer:
+        body: "Answer"
+  questions:
+    index:
+      ask_new_question: "Ask question"
+    create:
+      success: "Your question successfully created!"
+    new:
+      create: "Create new question"
+    destroy:
+      success: "Your question successfully removed!"
+  answers:
+    create:
+      success: "Your answer has been published successfully!"
+    destroy:
+      success: "Your answer successfully removed!"
+  shared:
+    errors:
+      header:
+        one: "%{count} error detected!"
+        other: "%{count} errors detected!"
+  nav:
+    root: "QnA"
+    logout: "Logout"
+    signup: "Signup"
+    login: "Login"
+  back: "Back"
+  delete: "Delete"
+  are_you_sure: "Are you sure?"

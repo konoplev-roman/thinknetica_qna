@@ -1,15 +1,29 @@
 # frozen_string_literal: true
 
 class AnswersController < ApplicationController
+  before_action :authenticate_user!
+
   expose :question
   expose :answers, from: :question
   expose :answer, parent: :question
 
   def create
+    answer.user = current_user
+
     if answer.save
-      redirect_to question_answers_path(question)
+      redirect_to question, notice: t('.success')
     else
-      render :new
+      render 'questions/show'
+    end
+  end
+
+  def destroy
+    if current_user&.author?(answer)
+      answer.destroy
+
+      redirect_to question, notice: t('.success')
+    else
+      render 'questions/show'
     end
   end
 

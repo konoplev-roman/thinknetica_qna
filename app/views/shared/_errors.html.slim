@@ -1,0 +1,6 @@
+- if resource&.errors.present?
+  div class='alert alert-danger' role='alert'
+    h4 class='alert-heading' = t('.header', count: resource.errors.count)
+    hr
+    - resource.errors.full_messages.each do |message|
+      p= message
