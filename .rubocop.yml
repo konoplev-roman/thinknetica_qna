@@ -22,3 +22,4 @@ Capybara/FeatureMethods:
     - scenario
     - background
     - given
+    - given!

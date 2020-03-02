@@ -6,3 +6,4 @@ RSpec/MultipleExpectations:
 Metrics/BlockLength:
   ExcludedMethods:
     - feature
+    - describe
