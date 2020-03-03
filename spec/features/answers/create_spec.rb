@@ -18,7 +18,7 @@ feature 'User can answer the question', %(
       visit question_path(question)
     end
 
-    scenario 'can answer the question with valid attributes' do
+    scenario 'can answer the question with valid attributes', js: true do
       fill_in 'Answer', with: 'Content of the answer'
 
       click_on 'Post Your Answer'
@@ -32,7 +32,7 @@ feature 'User can answer the question', %(
       expect(page).to have_css('.card', count: 1)
     end
 
-    scenario 'cannot answer the question without filling in the answer field' do
+    scenario 'cannot answer the question without filling in the answer field', js: true do
       click_on 'Post Your Answer'
 
       expect(page).to have_content 'Answer can\'t be blank'

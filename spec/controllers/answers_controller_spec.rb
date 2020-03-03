@@ -10,14 +10,14 @@ RSpec.describe AnswersController, type: :controller do
     context 'without authentication' do
       it 'does not save the answer' do
         expect {
-          post :create, params: { question_id: question, answer: attributes_for(:answer) }
+          post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
         }.not_to change(Answer, :count)
       end
 
-      it 're-renders show login view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+      it 'returns a unauthorized status code' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
 
-        expect(response).to redirect_to new_user_session_path
+        expect(response).to have_http_status(:unauthorized)
       end
     end
 
@@ -26,12 +26,12 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'saves a new answer in the database' do
         expect {
-          post :create, params: { question_id: question, answer: attributes_for(:answer) }
+          post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
         }.to change(Answer, :count).by(1)
       end
 
-      it 'saves a new answer nested to the crrent user' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+      it 'saves a new answer nested to the current user' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
 
         created_answer = Answer.order(id: :desc).first
 
@@ -39,17 +39,17 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'saves a new answer nested to the selected question' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
 
         created_answer = Answer.order(id: :desc).first
 
         expect(created_answer.question).to eq(question)
       end
 
-      it 'redirects to show question view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+      it 'renders create answer view' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
 
-        expect(response).to redirect_to question
+        expect(response).to render_template :create
       end
     end
 
@@ -58,14 +58,14 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'does not save the answer' do
         expect {
-          post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }
+          post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }, format: :js
         }.not_to change(Answer, :count)
       end
 
-      it 're-renders show question view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }
+      it 'renders create answer view' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }, format: :js
 
-        expect(response).to render_template 'questions/show'
+        expect(response).to render_template :create
       end
     end
   end

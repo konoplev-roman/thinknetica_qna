@@ -10,11 +10,7 @@ class AnswersController < ApplicationController
   def create
     answer.user = current_user
 
-    if answer.save
-      redirect_to question, notice: t('.success')
-    else
-      render 'questions/show'
-    end
+    flash.notice = t('.success') if answer.save
   end
 
   def destroy

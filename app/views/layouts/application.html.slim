@@ -15,6 +15,7 @@ html
     div class='container'
       == render 'shared/nav'
 
-      == render 'shared/flash'
+      div class='flash-messages'
+        == render 'shared/flash'
 
       == yield
