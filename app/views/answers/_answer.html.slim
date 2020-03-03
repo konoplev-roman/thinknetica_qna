@@ -2,6 +2,6 @@ div id="answer-#{answer.id}" class='card mb-3'
   div class='card-body'
     p class='card-text' = answer.body
     - if current_user&.author?(answer)
-      = link_to t('delete'), question_answer_path(question, answer), \
+      = link_to t('delete'), answer_path(answer), \
                 method: :delete, data: { confirm: t('are_you_sure') }, \
                 class: 'btn btn-danger btn-sm'

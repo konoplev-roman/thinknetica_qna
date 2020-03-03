@@ -3,10 +3,6 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
 
-  expose :question
-  expose :answers, from: :question
-  expose :answer, parent: :question
-
   def create
     answer.user = current_user
 
@@ -17,13 +13,24 @@ class AnswersController < ApplicationController
     if current_user&.author?(answer)
       answer.destroy
 
-      redirect_to question, notice: t('.success')
+      redirect_to answer.question, notice: t('.success')
     else
       render 'questions/show'
     end
   end
 
   private
+
+  def question
+    @question ||= Question.find(params[:question_id])
+  end
+
+  def answer
+    # Answer is initialized immediately with the answer_params for the method :create, since there is no method :new
+    @answer ||= params[:id] ? Answer.find(params[:id]) : question.answers.new(answer_params)
+  end
+
+  helper_method :answer
 
   def answer_params
     params.require(:answer).permit(:body)
