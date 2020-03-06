@@ -2,6 +2,7 @@
 
 class AnswersController < ApplicationController
   before_action :authenticate_user!
+  before_action :check_author!, only: :destroy
 
   def create
     answer.user = current_user
@@ -10,9 +11,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if current_user&.author?(answer)
-      answer.destroy
-
+    if answer.destroy
       redirect_to answer.question, notice: t('.success')
     else
       render 'questions/show'
@@ -34,5 +33,9 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:body)
+  end
+
+  def check_author!
+    redirect_to answer.question, status: :forbidden unless current_user&.author?(answer)
   end
 end

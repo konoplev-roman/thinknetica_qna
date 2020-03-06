@@ -110,10 +110,10 @@ RSpec.describe AnswersController, type: :controller do
         expect { delete :destroy, params: { question_id: question, id: answer } }.not_to change(Answer, :count)
       end
 
-      it 're-renders show question view' do
+      it 'returns a forbidden status code' do
         delete :destroy, params: { question_id: question, id: answer }
 
-        expect(response).to render_template 'questions/show'
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end

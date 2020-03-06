@@ -2,6 +2,7 @@
 
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, only: %i[new create destroy]
+  before_action :check_author!, only: :destroy
 
   expose :questions, -> { Question.all }
   expose :question
@@ -30,9 +31,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if current_user&.author?(question)
-      question.destroy
-
+    if question.destroy
       redirect_to questions_path, notice: t('.success')
     else
       render :show
@@ -43,5 +42,9 @@ class QuestionsController < ApplicationController
 
   def question_params
     params.require(:question).permit(:title, :body)
+  end
+
+  def check_author!
+    redirect_to question, status: :forbidden unless current_user&.author?(question)
   end
 end
