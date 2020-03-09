@@ -19,9 +19,9 @@ feature 'User can delete answer', %(
       visit question_path(question)
     end
 
-    scenario 'can delete their answer' do
+    scenario 'can delete their answer', js: true do
       within "#answer-#{their_answer.id}" do
-        click_on 'Delete'
+        accept_alert { click_on 'Delete' }
       end
 
       expect(page).to have_content 'Your answer successfully removed!'

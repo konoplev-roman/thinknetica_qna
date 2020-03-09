@@ -75,13 +75,15 @@ RSpec.describe AnswersController, type: :controller do
       let!(:answer) { create(:answer, question: question) }
 
       it 'does not delete the answer' do
-        expect { delete :destroy, params: { question_id: question, id: answer } }.not_to change(Answer, :count)
+        expect {
+          delete :destroy, params: { id: answer }, format: :js
+        }.not_to change(Answer, :count)
       end
 
-      it 're-renders show login view' do
-        delete :destroy, params: { question_id: question, id: answer }
+      it 'returns a unauthorized status code' do
+        delete :destroy, params: { id: answer }, format: :js
 
-        expect(response).to redirect_to new_user_session_path
+        expect(response).to have_http_status(:unauthorized)
       end
     end
 
@@ -91,13 +93,15 @@ RSpec.describe AnswersController, type: :controller do
       let!(:answer) { create(:answer, user: user, question: question) }
 
       it 'deletes the answer' do
-        expect { delete :destroy, params: { question_id: question, id: answer } }.to change(Answer, :count).by(-1)
+        expect {
+          delete :destroy, params: { id: answer }, format: :js
+        }.to change(Answer, :count).by(-1)
       end
 
-      it 'redirects to show question view' do
-        delete :destroy, params: { question_id: question, id: answer }
+      it 'renders destroy answer view' do
+        delete :destroy, params: { id: answer }, format: :js
 
-        expect(response).to redirect_to question
+        expect(response).to render_template :destroy
       end
     end
 
@@ -107,11 +111,13 @@ RSpec.describe AnswersController, type: :controller do
       let!(:answer) { create(:answer, question: question) }
 
       it 'does not delete the answer' do
-        expect { delete :destroy, params: { question_id: question, id: answer } }.not_to change(Answer, :count)
+        expect {
+          delete :destroy, params: { id: answer }, format: :js
+        }.not_to change(Answer, :count)
       end
 
       it 'returns a forbidden status code' do
-        delete :destroy, params: { question_id: question, id: answer }
+        delete :destroy, params: { id: answer }, format: :js
 
         expect(response).to have_http_status(:forbidden)
       end

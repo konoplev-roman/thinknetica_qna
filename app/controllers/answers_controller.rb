@@ -11,11 +11,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if answer.destroy
-      redirect_to answer.question, notice: t('.success')
-    else
-      render 'questions/show'
-    end
+    flash.notice = t('.success') if answer.destroy
   end
 
   private
