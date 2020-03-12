@@ -1,4 +1,4 @@
-$('.flash-messages').html('<%= render 'shared/flash' %>');
+$('#flash-messages').html('<%= render 'shared/flash' %>');
 
 <% if answer.destroyed? %>
   $('#answer-<%= answer.id %>').remove();

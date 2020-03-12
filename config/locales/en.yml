@@ -27,12 +27,10 @@ en:
       answer:
         body: "Answer"
   questions:
-    index:
-      ask_new_question: "Ask question"
     create:
       success: "Your question successfully created!"
     new:
-      create: "Create new question"
+      create: "Ask your question"
     destroy:
       success: "Your question successfully removed!"
   answers:
@@ -47,6 +45,7 @@ en:
         other: "%{count} errors detected!"
   nav:
     root: "QnA"
+    ask_question: "Ask question"
     logout: "Logout"
     signup: "Signup"
     login: "Login"
