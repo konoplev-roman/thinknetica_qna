@@ -17,6 +17,7 @@ en:
   helpers:
     submit:
       question:
+        update: "Save"
         create: "Ask"
       answer:
         create: "Post Your Answer"
@@ -33,6 +34,10 @@ en:
       create: "Ask your question"
     destroy:
       success: "Your question successfully removed!"
+    show:
+      edit: "Edit your question"
+    update:
+      success: "Your question successfully updated!"
   answers:
     create:
       success: "Your answer has been published successfully!"
@@ -50,5 +55,6 @@ en:
     signup: "Signup"
     login: "Login"
   back: "Back"
+  edit: "Edit"
   delete: "Delete"
   are_you_sure: "Are you sure?"

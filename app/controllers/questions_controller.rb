@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, only: %i[new create destroy]
-  before_action :check_author!, only: :destroy
+  before_action :authenticate_user!, only: %i[new create update destroy]
+  before_action :check_author!, only: %i[update destroy]
 
   expose :questions, -> { Question.all }
   expose :question
@@ -23,11 +23,7 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if question.update(question_params)
-      redirect_to question
-    else
-      render :edit
-    end
+    flash.notice = t('.success') if question.update(question_params)
   end
 
   def destroy

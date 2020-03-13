@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  describe 'POST #create' do
-    let(:user) { create(:user) }
+  let(:user) { create(:user) }
 
+  describe 'POST #create' do
     context 'without authentication' do
       it 'does not save the question' do
         expect {
@@ -62,30 +62,12 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    let(:question) { create(:question) }
+    context 'without authentication' do
+      let!(:question) { create(:question) }
 
-    context 'with valid attributes' do
-      before { patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } } }
-
-      it 'changes question attribute title' do
-        question.reload
-
-        expect(question.title).to eq('new title')
+      before do
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
       end
-
-      it 'changes question attribute body' do
-        question.reload
-
-        expect(question.body).to eq('new body')
-      end
-
-      it 'redirects to updated question' do
-        expect(response).to redirect_to question
-      end
-    end
-
-    context 'with invalid attributes' do
-      before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) } }
 
       it 'does not change question attribute title' do
         question.reload
@@ -99,15 +81,91 @@ RSpec.describe QuestionsController, type: :controller do
         expect(question.body).to eq('MyText')
       end
 
-      it 're-renders edit view' do
-        expect(response).to render_template :edit
+      it 'returns a unauthorized status code' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'with own question with valid attributes' do
+      let!(:question) { create(:question, user: user) }
+
+      before do
+        login(user)
+
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
+      end
+
+      it 'changes question attribute title' do
+        question.reload
+
+        expect(question.title).to eq('new title')
+      end
+
+      it 'changes question attribute body' do
+        question.reload
+
+        expect(question.body).to eq('new body')
+      end
+
+      it 'renders update question view' do
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'with own question with invalid attributes' do
+      let!(:question) { create(:question, user: user) }
+
+      before do
+        login(user)
+
+        patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
+      end
+
+      it 'does not change question attribute title' do
+        question.reload
+
+        expect(question.title).to eq('MyString')
+      end
+
+      it 'does not change question attribute body' do
+        question.reload
+
+        expect(question.body).to eq('MyText')
+      end
+
+      it 'renders update question view' do
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'with someone else\'s question' do
+      let!(:question) { create(:question) }
+
+      before do
+        login(user)
+
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
+      end
+
+      it 'does not change question attribute title' do
+        question.reload
+
+        expect(question.title).to eq('MyString')
+      end
+
+      it 'does not change question attribute body' do
+        question.reload
+
+        expect(question.body).to eq('MyText')
+      end
+
+      it 'returns a forbidden status code' do
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end
 
   describe 'DELETE #destroy' do
-    let(:user) { create(:user) }
-
     context 'without authentication' do
       let!(:question) { create(:question) }
 
