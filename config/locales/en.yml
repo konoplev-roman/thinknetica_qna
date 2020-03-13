@@ -20,6 +20,7 @@ en:
         update: "Save"
         create: "Ask"
       answer:
+        update: "Save"
         create: "Post Your Answer"
     label:
       question:
@@ -43,6 +44,10 @@ en:
       success: "Your answer has been published successfully!"
     destroy:
       success: "Your answer successfully removed!"
+    answer:
+      edit: "Edit your answer"
+    update:
+      success: "Your answer successfully updated!"
   shared:
     errors:
       header:

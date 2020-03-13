@@ -2,12 +2,16 @@
 
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :check_author!, only: :destroy
+  before_action :check_author!, only: %i[update destroy]
 
   def create
     answer.user = current_user
 
     flash.notice = t('.success') if answer.save
+  end
+
+  def update
+    flash.notice = t('.success') if answer.update(answer_params)
   end
 
   def destroy

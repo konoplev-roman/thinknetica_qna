@@ -70,6 +70,84 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe 'PATCH #update' do
+    context 'without authentication' do
+      let!(:answer) { create(:answer, question: question) }
+
+      before { patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js }
+
+      it 'does not change answer attribute body' do
+        answer.reload
+
+        expect(answer.body).to eq('MyText')
+      end
+
+      it 'returns unauthorized error' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'with own answer with valid attributes' do
+      let!(:answer) { create(:answer, question: question, user: user) }
+
+      before do
+        login(user)
+
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+      end
+
+      it 'changes answer attribute body' do
+        answer.reload
+
+        expect(answer.body).to eq('new body')
+      end
+
+      it 'renders update answer view' do
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'with own answer with invalid attributes' do
+      let!(:answer) { create(:answer, question: question, user: user) }
+
+      before do
+        login(user)
+
+        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+      end
+
+      it 'does not change answer attribute body' do
+        answer.reload
+
+        expect(answer.body).to eq('MyText')
+      end
+
+      it 'renders update answer view' do
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'with someone else\'s answer' do
+      let!(:answer) { create(:answer, question: question) }
+
+      before do
+        login(user)
+
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+      end
+
+      it 'does not change answer attribute body' do
+        answer.reload
+
+        expect(answer.body).to eq('MyText')
+      end
+
+      it 'returns forbidden error' do
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
   describe 'DELETE #destroy' do
     context 'without authentication' do
       let!(:answer) { create(:answer, question: question) }
