@@ -1,0 +1,18 @@
+$('#flash-messages').html('<%= render 'shared/flash' %>');
+
+<% unless answer.errors.present? %>
+  // Removing styles from the old best answer
+  $('.answers .card').removeClass('border-warning');
+  $('.answers .best-answer-footer').remove();
+
+  // Adding styles to the new best answer
+  $('#answer-<%= answer.id %>').addClass('border-warning');
+  $('#answer-<%= answer.id %> .answer').append(
+      "<p class='card-text best-answer-footer'>" +
+        "<small class='text-muted'><%= t('answers.answer.best_answer_footer') %></small>" +
+      "</p>"
+  );
+
+  // Moving the best answer up the list
+  $('#answer-<%= answer.id %>').prependTo('.answers');
+<% end %>

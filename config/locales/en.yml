@@ -46,8 +46,12 @@ en:
       success: "Your answer successfully removed!"
     answer:
       edit: "Edit your answer"
+      best: "Best"
+      best_answer_footer: "The question author chose this as the best answer"
     update:
       success: "Your answer successfully updated!"
+    best:
+      success: "You have successfully chosen the best answer!"
   shared:
     errors:
       header:

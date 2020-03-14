@@ -148,6 +148,66 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe 'PATCH #best' do
+    context 'without authentication' do
+      let!(:answer) { create(:answer) }
+
+      before { patch :best, params: { id: answer }, format: :js }
+
+      it 'does not save answer as the best' do
+        answer.reload
+
+        expect(answer).not_to be_best
+      end
+
+      it 'returns unauthorized error' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'with the answer to own question' do
+      let(:question) { create(:question, user: user) }
+      let!(:answer) { create(:answer, question: question) }
+
+      before do
+        login(user)
+
+        patch :best, params: { id: answer }, format: :js
+      end
+
+      it 'saves answer as the best' do
+        answer.reload
+
+        expect(answer).to be_best
+      end
+
+      it 'renders best answer view' do
+        expect(response).to render_template :best
+      end
+    end
+
+    context 'with the answer to someone else\'s question' do
+      let(:question) { create(:question) }
+      let!(:answer) { create(:answer, question: question) }
+
+      before do
+        login(user)
+
+        patch :best, params: { id: answer }, format: :js
+      end
+
+      it 'does not save answer as the best' do
+        answer.reload
+
+        expect(answer).not_to be_best
+      end
+
+      it 'returns forbidden error' do
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
   describe 'DELETE #destroy' do
     context 'without authentication' do
       let!(:answer) { create(:answer, question: question) }

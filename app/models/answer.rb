@@ -5,4 +5,9 @@ class Answer < ApplicationRecord
   belongs_to :question
 
   validates :question, :body, presence: true
+  validates :best, uniqueness: { scope: :question_id }, if: :best?
+
+  def best?
+    best
+  end
 end
