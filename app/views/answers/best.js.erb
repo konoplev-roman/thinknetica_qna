@@ -1,6 +1,6 @@
 $('#flash-messages').html('<%= render 'shared/flash' %>');
 
-<% unless answer.errors.present? %>
+<% if answer.errors.blank? %>
   // Removing styles from the old best answer
   $('.answers .card').removeClass('border-warning');
   $('.answers .best-answer-footer').remove();

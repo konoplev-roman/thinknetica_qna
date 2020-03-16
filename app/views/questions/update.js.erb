@@ -2,7 +2,7 @@ $('.question-errors').html('<%= render 'shared/errors', resource: question %>');
 
 $('#flash-messages').html('<%= render 'shared/flash' %>');
 
-<% unless question.errors.present? %>
+<% if question.errors.blank? %>
   $('.question .title').text('<%= j question.title %>');
   $('.question .body').text('<%= j question.body %>');
 

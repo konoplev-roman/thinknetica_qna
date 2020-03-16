@@ -2,6 +2,6 @@ $('#answer-<%= answer.id %> .answer-errors').html('<%= render 'shared/errors', r
 
 $('#flash-messages').html('<%= render 'shared/flash' %>');
 
-<% unless answer.errors.present? %>
+<% if answer.errors.blank? %>
   $('#answer-<%= answer.id %>').replaceWith('<%= j render answer %>');
 <% end %>
