@@ -20,17 +20,4 @@ RSpec.describe Answer, type: :model do
 
     it { is_expected.not_to validate_uniqueness_of(:best).scoped_to(:question_id) }
   end
-
-  describe '#best?' do
-    let(:answer) { build(:answer) }
-    let(:best_answer) { build(:answer, best: true) }
-
-    it 'return true if the answer is the best' do
-      expect(best_answer).to be_best
-    end
-
-    it 'return false if the answer is not the best' do
-      expect(answer).not_to be_best
-    end
-  end
 end
