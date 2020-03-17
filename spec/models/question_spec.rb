@@ -9,23 +9,6 @@ RSpec.describe Question, type: :model do
   it { is_expected.to validate_presence_of :title }
   it { is_expected.to validate_presence_of :body }
 
-  describe '#best_answer' do
-    let(:question1) { create(:question) }
-    let!(:answer1) { create(:answer, question: question1, best: true) }
-
-    let(:question2) { create(:question) }
-
-    it 'return answer if it is marked as the best' do
-      expect(question1.best_answer).to eq(answer1)
-    end
-
-    it 'return nil if no answer is marked as best' do
-      create(:answer, question: question2)
-
-      expect(question2.best_answer).to be_nil
-    end
-  end
-
   describe '#best_answer!' do
     let(:question) { create(:question) }
     let!(:old_best_answer) { create(:answer, question: question, best: true) }
