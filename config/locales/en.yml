@@ -28,15 +28,15 @@ en:
         body: "Body"
       answer:
         body: "Answer"
+    question:
+      header:
+        create: "Ask your question"
+        edit: "Edit your question"
   questions:
     create:
       success: "Your question successfully created!"
-    new:
-      create: "Ask your question"
     destroy:
       success: "Your question successfully removed!"
-    show:
-      edit: "Edit your question"
     update:
       success: "Your question successfully updated!"
   answers:

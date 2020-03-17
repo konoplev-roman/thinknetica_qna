@@ -14,24 +14,7 @@ div class='question'
 
 - if current_user&.author?(question)
   div class='edit-question d-none'
-    h1 = t('.edit')
-
-    div class='question-errors'
-      == render 'shared/errors', resource: question
-
-    = form_with model: question do |f|
-      div class='mb-3'
-        = f.label :title
-        = f.text_field :title, class: 'form-control'
-
-      div class='mb-3'
-        = f.label :body
-        = f.text_area :body, cols: 40, rows: 3, class: 'form-control mr-sm-2'
-
-      hr class='mb-4'
-
-      div class='d-flex bd-highlight mb-3'
-        = f.submit class: 'btn btn-primary btn-lg'
+    == render 'form'
 
 div class='answers'
   == render question.answers.reject(&:new_record?)
