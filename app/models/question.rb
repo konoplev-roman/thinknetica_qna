@@ -7,9 +7,11 @@ class Question < ApplicationRecord
   validates :title, :body, presence: true
 
   def best_answer!(answer)
-    # Don't use update_all because it skips validations
-    answers.find_by(best: true)&.update!(best: false)
+    answer.transaction do
+      # Don't use update_all because it skips validations
+      answers.find_by(best: true)&.update!(best: false)
 
-    answer.update!(best: true)
+      answer.update!(best: true)
+    end
   end
 end
