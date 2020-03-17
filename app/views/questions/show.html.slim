@@ -14,6 +14,8 @@ div class='question'
 
 - if current_user&.author?(question)
   div class='edit-question d-none'
+    h1 = t('.edit')
+
     == render 'form'
 
 div class='answers'

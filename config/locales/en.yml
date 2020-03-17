@@ -28,10 +28,6 @@ en:
         body: "Body"
       answer:
         body: "Answer"
-    question:
-      header:
-        create: "Ask your question"
-        edit: "Edit your question"
   questions:
     create:
       success: "Your question successfully created!"
@@ -39,6 +35,10 @@ en:
       success: "Your question successfully removed!"
     update:
       success: "Your question successfully updated!"
+    show:
+      edit: "Edit your question"
+    new:
+      create: "Ask your question"
   answers:
     create:
       success: "Your answer has been published successfully!"
