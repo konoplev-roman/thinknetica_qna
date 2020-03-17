@@ -3,7 +3,9 @@ h1 = question_header(question)
 div class='question-errors'
   == render 'shared/errors', resource: question
 
-= form_with model: question, **question_form_options(question) do |f|
+/ By default form submits are remote and unobtrusive XHRs.
+/ Disable remote submits with local: true to create a new question
+= form_with model: question, local: question.new_record? do |f|
   div class='mb-3'
     = f.label :title
     = f.text_field :title, class: 'form-control'
