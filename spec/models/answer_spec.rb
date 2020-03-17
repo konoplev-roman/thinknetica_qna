@@ -20,4 +20,24 @@ RSpec.describe Answer, type: :model do
 
     it { is_expected.not_to validate_uniqueness_of(:best).scoped_to(:question_id) }
   end
+
+  describe '#best!' do
+    let(:question) { create(:question) }
+    let!(:old_best_answer) { create(:answer, question: question, best: true) }
+    let!(:new_best_answer) { create(:answer, question: question) }
+
+    before { new_best_answer.best! }
+
+    it 'make other answers to this question not the best' do
+      old_best_answer.reload
+
+      expect(old_best_answer).not_to be_best
+    end
+
+    it 'makes the answer best' do
+      new_best_answer.reload
+
+      expect(new_best_answer).to be_best
+    end
+  end
 end

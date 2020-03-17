@@ -6,4 +6,13 @@ class Answer < ApplicationRecord
 
   validates :question, :body, presence: true
   validates :best, uniqueness: { scope: :question_id }, if: :best?
+
+  def best!
+    transaction do
+      # Don't use update_all because it skips validations
+      question.answers.find_by(best: true)&.update!(best: false)
+
+      update!(best: true)
+    end
+  end
 end

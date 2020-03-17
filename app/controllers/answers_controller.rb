@@ -20,7 +20,7 @@ class AnswersController < ApplicationController
   end
 
   def best
-    flash.notice = t('.success') if question.best_answer!(answer)
+    flash.notice = t('.success') if answer.best!
   end
 
   private
