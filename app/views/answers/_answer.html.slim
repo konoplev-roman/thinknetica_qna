@@ -25,15 +25,6 @@ div id="answer-#{answer.id}" class="card mb-3 #{'border-warning' if answer.best?
     div class='card-body d-none edit-answer'
       h5 class='card-title' = t('.edit')
 
-      div class='answer-errors'
-        == render 'shared/errors', resource: answer
-
-      = form_with model: answer do |f|
-        div class='mb-3'
-          = f.label :body
-          = f.text_area :body, cols: 40, rows: 3, class: 'form-control mr-sm-2'
-
-        hr class='mb-4'
-
-        div class='d-flex bd-highlight mb-3'
-          = f.submit class: 'btn btn-primary btn-lg'
+      / Must send an already existing answer to the form,
+      / otherwise a form will be generated to create a new answer
+      == render 'answers/form', answer: answer

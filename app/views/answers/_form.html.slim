@@ -1,7 +1,9 @@
 div class='answer-errors'
   == render 'shared/errors', resource: answer
 
-= form_with model: [question, answer] do |f|
+/ Since the shallow: true option is used,
+/ a question must also be passed to create the answer.
+= form_with model: answer.new_record? ? [question, answer] : answer do |f|
   div class='mb-3'
     = f.label :body
     = f.text_area :body, cols: 40, rows: 3, class: 'form-control mr-sm-2'
