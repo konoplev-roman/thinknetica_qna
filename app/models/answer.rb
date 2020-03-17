@@ -9,8 +9,7 @@ class Answer < ApplicationRecord
 
   def best!
     transaction do
-      # Don't use update_all because it skips validations
-      question.answers.find_by(best: true)&.update!(best: false)
+      question.answers.update_all(best: false) # rubocop:disable SkipsModelValidations
 
       update!(best: true)
     end
