@@ -19,5 +19,6 @@ div class='question'
 div class='answers'
   == render question.answers.reject(&:new_record?)
 
-- if user_signed_in?
-  == render 'answers/from'
+div class='new-answer'
+  - if user_signed_in?
+    == render 'answers/form'
