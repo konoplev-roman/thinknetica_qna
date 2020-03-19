@@ -42,6 +42,23 @@ feature 'User can edit question', %(
       expect(page).to have_content 'Your question successfully updated!'
     end
 
+    scenario 'can attach a file to their question', js: true do
+      within '.question' do
+        click_on 'Edit'
+      end
+
+      within '.edit-question' do
+        attach_file 'Attach files',
+                    [Rails.root.join('spec/rails_helper.rb'), Rails.root.join('spec/spec_helper.rb')],
+                    visible: false
+
+        click_on 'Save'
+      end
+
+      expect(page).to have_content 'rails_helper.rb'
+      expect(page).to have_content 'spec_helper.rb'
+    end
+
     describe 'cannot edit their question' do
       scenario 'without filling in the title field', js: true do
         within '.question' do
