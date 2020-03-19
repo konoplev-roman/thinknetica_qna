@@ -1,0 +1,23 @@
+div class='show-question'
+  div class='d-flex'
+    h1 class='mr-auto title' = question.title
+
+    - if current_user&.author?(question)
+      p class='ml-2' = link_to t('edit'), '#', \
+                       class: 'btn btn-success btn-sm edit-question-link'
+
+      p class='ml-2' = link_to t('delete'), question_path(question), \
+                       method: :delete, data: { confirm: t('are_you_sure') }, \
+                       class: 'btn btn-danger btn-sm'
+
+  p class='body' = question.body
+
+  - if question.files.attached?
+    - question.files.each do |file|
+      p = link_to file.filename.to_s, url_for(file)
+
+- if current_user&.author?(question)
+  div class='edit-question d-none'
+    h1 = t('.edit')
+
+    == render 'form'
