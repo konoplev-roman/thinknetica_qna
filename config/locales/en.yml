@@ -26,6 +26,7 @@ en:
       question:
         title: "Title"
         body: "Body"
+        files: "Attach files"
       answer:
         body: "Answer"
   questions:

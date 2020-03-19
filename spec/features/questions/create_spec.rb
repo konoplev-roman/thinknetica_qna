@@ -36,6 +36,20 @@ feature 'User can create question', %(
       expect(page).to have_content 'Content of the question'
     end
 
+    scenario 'can attach a file by asking a question' do
+      visit new_question_path
+
+      fill_in 'Title', with: 'Title of the question'
+      fill_in 'Body', with: 'Content of the question'
+
+      attach_file 'Attach files', [Rails.root.join('spec/rails_helper.rb'), Rails.root.join('spec/spec_helper.rb')]
+
+      click_on 'Ask'
+
+      expect(page).to have_content 'rails_helper.rb'
+      expect(page).to have_content 'spec_helper.rb'
+    end
+
     describe 'cannot ask a question' do
       background { visit new_question_path }
 
