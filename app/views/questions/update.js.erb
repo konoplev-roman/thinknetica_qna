@@ -1,0 +1,11 @@
+$('.question-errors').html('<%= render 'shared/errors', resource: question %>');
+
+$('#flash-messages').html('<%= render 'shared/flash' %>');
+
+<% if question.errors.blank? %>
+  $('.question .title').text('<%= j question.title %>');
+  $('.question .body').text('<%= j question.body %>');
+
+  $('.question').removeClass('d-none');
+  $('.edit-question').addClass('d-none');
+<% end %>

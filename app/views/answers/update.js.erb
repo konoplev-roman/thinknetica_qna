@@ -1,0 +1,7 @@
+$('#answer-<%= answer.id %> .answer-errors').html('<%= render 'shared/errors', resource: answer %>');
+
+$('#flash-messages').html('<%= render 'shared/flash' %>');
+
+<% if answer.errors.blank? %>
+  $('#answer-<%= answer.id %>').replaceWith('<%= j render answer %>');
+<% end %>

@@ -18,10 +18,12 @@ feature 'User can answer the question', %(
       visit question_path(question)
     end
 
-    scenario 'can answer the question with valid attributes' do
-      fill_in 'Answer', with: 'Content of the answer'
+    scenario 'can answer the question with valid attributes', js: true do
+      within '.new-answer' do
+        fill_in 'Answer', with: 'Content of the answer'
 
-      click_on 'Post Your Answer'
+        click_on 'Post Your Answer'
+      end
 
       expect(page).to have_current_path(question_path(question))
 
@@ -32,8 +34,10 @@ feature 'User can answer the question', %(
       expect(page).to have_css('.card', count: 1)
     end
 
-    scenario 'cannot answer the question without filling in the answer field' do
-      click_on 'Post Your Answer'
+    scenario 'cannot answer the question without filling in the answer field', js: true do
+      within '.new-answer' do
+        click_on 'Post Your Answer'
+      end
 
       expect(page).to have_content 'Answer can\'t be blank'
 
@@ -45,7 +49,9 @@ feature 'User can answer the question', %(
     scenario 'does not see the link to answer the question' do
       visit question_path(question)
 
-      expect(page).to have_no_content 'Post Your Answer'
+      within '.new-answer' do
+        expect(page).to have_no_content 'Post Your Answer'
+      end
     end
   end
 end

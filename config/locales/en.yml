@@ -17,8 +17,10 @@ en:
   helpers:
     submit:
       question:
+        update: "Save"
         create: "Ask"
       answer:
+        update: "Save"
         create: "Post Your Answer"
     label:
       question:
@@ -27,19 +29,29 @@ en:
       answer:
         body: "Answer"
   questions:
-    index:
-      ask_new_question: "Ask question"
     create:
       success: "Your question successfully created!"
-    new:
-      create: "Create new question"
     destroy:
       success: "Your question successfully removed!"
+    update:
+      success: "Your question successfully updated!"
+    show:
+      edit: "Edit your question"
+    new:
+      create: "Ask your question"
   answers:
     create:
       success: "Your answer has been published successfully!"
     destroy:
       success: "Your answer successfully removed!"
+    answer:
+      edit: "Edit your answer"
+      best: "Best"
+      best_answer_footer: "The question author chose this as the best answer"
+    update:
+      success: "Your answer successfully updated!"
+    best:
+      success: "You have successfully chosen the best answer!"
   shared:
     errors:
       header:
@@ -47,9 +59,11 @@ en:
         other: "%{count} errors detected!"
   nav:
     root: "QnA"
+    ask_question: "Ask question"
     logout: "Logout"
     signup: "Signup"
     login: "Login"
   back: "Back"
+  edit: "Edit"
   delete: "Delete"
   are_you_sure: "Are you sure?"

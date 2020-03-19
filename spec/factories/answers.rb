@@ -7,6 +7,8 @@ FactoryBot.define do
 
     body { 'MyText' }
 
+    best { false }
+
     trait :invalid do
       body { nil }
     end
