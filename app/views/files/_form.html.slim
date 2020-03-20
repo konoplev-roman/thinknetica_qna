@@ -1,0 +1,6 @@
+div class='input-group mb-3 file' id="file-#{file.id}"
+  p class='form-control' = file.filename.to_s
+  div class='input-group-append'
+    = link_to t('delete'), file_path(file), \
+              method: :delete, data: { confirm: t('are_you_sure') }, remote: true, \
+              class: 'btn btn-danger'
