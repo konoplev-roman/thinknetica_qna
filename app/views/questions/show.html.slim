@@ -2,7 +2,7 @@ div class='question'
   == render 'show'
 
 div class='answers'
-  == render question.answers.reject(&:new_record?)
+  == render question.answers.with_attached_files.reject(&:new_record?)
 
 div class='new-answer'
   - if user_signed_in?

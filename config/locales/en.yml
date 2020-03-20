@@ -29,6 +29,7 @@ en:
         files: "Attach files"
       answer:
         body: "Answer"
+        files: "Attach files"
   questions:
     create:
       success: "Your question successfully created!"

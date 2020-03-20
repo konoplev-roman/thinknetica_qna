@@ -34,6 +34,23 @@ feature 'User can answer the question', %(
       expect(page).to have_css('.card', count: 1)
     end
 
+    scenario 'can attach a file by answer the question', js: true do
+      within '.new-answer' do
+        fill_in 'Answer', with: 'Content of the answer'
+
+        attach_file 'Attach files', \
+                    [Rails.root.join('spec/rails_helper.rb'), Rails.root.join('spec/spec_helper.rb')], \
+                    visible: false
+
+        click_on 'Post Your Answer'
+      end
+
+      within '.answer' do
+        expect(page).to have_content 'rails_helper.rb'
+        expect(page).to have_content 'spec_helper.rb'
+      end
+    end
+
     scenario 'cannot answer the question without filling in the answer field', js: true do
       within '.new-answer' do
         click_on 'Post Your Answer'
