@@ -12,6 +12,15 @@ div class='question-errors'
     = f.label :body
     = f.text_area :body, cols: 40, rows: 3, class: 'form-control mr-sm-2'
 
+  - if question.files.attached?
+    - question.files.each do |file|
+      div class='input-group mb-3 file' id="file-#{file.id}"
+        p class='form-control' = file.filename.to_s
+        div class='input-group-append'
+          = link_to t('delete'), file_path(file), \
+                    method: :delete, data: { confirm: t('are_you_sure') }, remote: true, \
+                    class: 'btn btn-danger'
+
   div class='custom-file mb-3'
     = f.file_field :files, multiple: true, class: 'custom-file-input'
     = f.label :files, class: 'custom-file-label'

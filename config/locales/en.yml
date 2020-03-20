@@ -53,6 +53,9 @@ en:
       success: "Your answer successfully updated!"
     best:
       success: "You have successfully chosen the best answer!"
+  files:
+    destroy:
+      success: "Your file successfully removed!"
   shared:
     errors:
       header:
