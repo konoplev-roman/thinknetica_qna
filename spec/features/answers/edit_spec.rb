@@ -39,9 +39,9 @@ feature 'User can edit answer', %(
     describe 'with files' do
       given!(:their_answer_with_files) { create(:answer, :with_files, question: question, user: user) }
 
-      scenario 'can attach a file to their answer', js: true do
-        visit question_path(question)
+      background { visit question_path(question) }
 
+      scenario 'can attach a file to their answer', js: true do
         within "#answer-#{their_answer_with_files.id}" do
           click_on 'Edit'
 
@@ -56,6 +56,24 @@ feature 'User can edit answer', %(
           # new file
           expect(page).to have_content '.rspec'
         end
+      end
+
+      scenario 'can delete a file from their answer', js: true do
+        within "#answer-#{their_answer_with_files.id}" do
+          click_on 'Edit'
+
+          within '.edit-answer .file', text: 'rails_helper.rb' do
+            accept_alert { click_on 'Delete' }
+          end
+
+          # this file was added earlier and should be saved
+          expect(page).to have_content 'spec_helper.rb'
+
+          # deleted file
+          expect(page).to have_no_content 'rails_helper.rb'
+        end
+
+        expect(page).to have_content 'Your file successfully removed!'
       end
     end
 
