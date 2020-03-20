@@ -22,7 +22,7 @@ div class='question-errors'
                     class: 'btn btn-danger'
 
   div class='custom-file mb-3'
-    = f.file_field :files, multiple: true, class: 'custom-file-input'
+    = f.file_field :files, multiple: true, direct_upload: true, class: 'custom-file-input'
     = f.label :files, class: 'custom-file-label'
 
   hr class='mb-4'
