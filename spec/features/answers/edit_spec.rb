@@ -36,6 +36,29 @@ feature 'User can edit answer', %(
       expect(page).to have_content 'Your answer successfully updated!'
     end
 
+    describe 'with files' do
+      given!(:their_answer_with_files) { create(:answer, :with_files, question: question, user: user) }
+
+      scenario 'can attach a file to their answer', js: true do
+        visit question_path(question)
+
+        within "#answer-#{their_answer_with_files.id}" do
+          click_on 'Edit'
+
+          attach_file 'Attach files', Rails.root.join('.rspec'), visible: false
+
+          click_on 'Save'
+
+          # these files were added earlier and should be saved
+          expect(page).to have_content 'rails_helper.rb'
+          expect(page).to have_content 'spec_helper.rb'
+
+          # new file
+          expect(page).to have_content '.rspec'
+        end
+      end
+    end
+
     scenario 'cannot edit their question without filling in the answer field', js: true do
       within "#answer-#{their_answer.id}" do
         click_on 'Edit'
