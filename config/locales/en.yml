@@ -26,8 +26,10 @@ en:
       question:
         title: "Title"
         body: "Body"
+        files: "Attach files"
       answer:
         body: "Answer"
+        files: "Attach files"
   questions:
     create:
       success: "Your question successfully created!"
@@ -52,6 +54,9 @@ en:
       success: "Your answer successfully updated!"
     best:
       success: "You have successfully chosen the best answer!"
+  files:
+    destroy:
+      success: "Your file successfully removed!"
   shared:
     errors:
       header:

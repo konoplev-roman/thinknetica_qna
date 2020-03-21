@@ -42,6 +42,49 @@ feature 'User can edit question', %(
       expect(page).to have_content 'Your question successfully updated!'
     end
 
+    describe 'with files' do
+      given!(:their_question_with_files) { create(:question, :with_files, user: user) }
+
+      background { visit question_path(their_question_with_files) }
+
+      scenario 'can attach a file to their question', js: true do
+        within '.question' do
+          click_on 'Edit'
+        end
+
+        within '.edit-question' do
+          attach_file 'Attach files', Rails.root.join('.rspec'), visible: false
+
+          click_on 'Save'
+        end
+
+        # these files were added earlier and should be saved
+        expect(page).to have_content 'rails_helper.rb'
+        expect(page).to have_content 'spec_helper.rb'
+
+        # new file
+        expect(page).to have_content '.rspec'
+      end
+
+      scenario 'can delete a file from their question', js: true do
+        within '.question' do
+          click_on 'Edit'
+        end
+
+        within '.edit-question .file', text: 'rails_helper.rb' do
+          accept_alert { click_on 'Delete' }
+        end
+
+        # this file was added earlier and should be saved
+        expect(page).to have_content 'spec_helper.rb'
+
+        # deleted file
+        expect(page).to have_no_content 'rails_helper.rb'
+
+        expect(page).to have_content 'Your file successfully removed!'
+      end
+    end
+
     describe 'cannot edit their question' do
       scenario 'without filling in the title field', js: true do
         within '.question' do

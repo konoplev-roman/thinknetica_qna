@@ -10,5 +10,14 @@ FactoryBot.define do
     trait :invalid do
       title { nil }
     end
+
+    trait :with_files do
+      files do
+        [
+          fixture_file_upload(Rails.root.join('spec/rails_helper.rb')),
+          fixture_file_upload(Rails.root.join('spec/spec_helper.rb'))
+        ]
+      end
+    end
   end
 end

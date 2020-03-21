@@ -5,7 +5,7 @@ class QuestionsController < ApplicationController
   before_action :check_author!, only: %i[update destroy]
 
   expose :questions, -> { Question.all }
-  expose :question
+  expose :question, scope: -> { Question.with_attached_files }
   expose :answer, -> { question.answers.new }
 
   # This is a stub, used for indexing in before_action :authenticate_user!
@@ -37,7 +37,7 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :body, files: [])
   end
 
   def check_author!

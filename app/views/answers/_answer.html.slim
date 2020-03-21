@@ -17,6 +17,8 @@ div id="answer-#{answer.id}" class="card mb-3 #{'border-warning' if answer.best?
                          method: :delete, data: { confirm: t('are_you_sure') }, remote: true, \
                          class: 'btn btn-danger btn-sm'
 
+    == render collection: answer.files, partial: 'files/file'
+
     - if answer.best?
       p class='card-text best-answer-footer'
         small class='text-muted' = t('.best_answer_footer')

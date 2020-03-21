@@ -12,6 +12,12 @@ div class='question-errors'
     = f.label :body
     = f.text_area :body, cols: 40, rows: 3, class: 'form-control mr-sm-2'
 
+  == render collection: question.files, partial: 'files/form', as: :file
+
+  div class='custom-file mb-3'
+    = f.file_field :files, multiple: true, direct_upload: true, class: 'custom-file-input'
+    = f.label :files, class: 'custom-file-label'
+
   hr class='mb-4'
 
   div class='d-flex bd-highlight mb-3'

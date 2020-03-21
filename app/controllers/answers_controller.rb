@@ -37,7 +37,7 @@ class AnswersController < ApplicationController
   helper_method :answer, :question
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 
   def check_author!

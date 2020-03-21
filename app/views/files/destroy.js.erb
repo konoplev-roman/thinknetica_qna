@@ -1,0 +1,5 @@
+$('#flash-messages').html('<%= render 'shared/flash' %>');
+
+<% if file.destroyed? %>
+  $('#file-<%= file.id %>').remove();
+<% end %>
