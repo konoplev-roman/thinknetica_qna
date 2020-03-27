@@ -9,6 +9,8 @@ feature 'User can create question', %(
 ) do
   describe 'Authenticated user' do
     given(:user) { create(:user) }
+    given(:google_url) { 'http://google.com/' }
+    given(:gist_url) { 'https://gist.github.com/konoplev-roman/1152c4e0e09e1f8616c278a1a4a214a3' }
 
     background { login(user) }
 
@@ -50,6 +52,32 @@ feature 'User can create question', %(
       expect(page).to have_content 'spec_helper.rb'
     end
 
+    scenario 'can add links by asking a question', js: true do
+      visit new_question_path
+
+      fill_in 'Title', with: 'Title of the question'
+      fill_in 'Body', with: 'Content of the question'
+
+      click_on 'Add link'
+
+      within '.link:nth-child(1)' do
+        fill_in 'Link name', with: 'Link to google'
+        fill_in 'Url', with: google_url
+      end
+
+      click_on 'Add link'
+
+      within '.link:nth-child(2)' do
+        fill_in 'Link name', with: 'Link to gist'
+        fill_in 'Url', with: gist_url
+      end
+
+      click_on 'Ask'
+
+      expect(page).to have_link 'Link to google', href: google_url
+      expect(page).to have_link 'Link to gist', href: gist_url
+    end
+
     describe 'cannot ask a question' do
       background { visit new_question_path }
 
@@ -71,6 +99,36 @@ feature 'User can create question', %(
         expect(page).to have_current_path(questions_path)
 
         expect(page).to have_content 'Body can\'t be blank'
+      end
+
+      scenario 'without filling in the name of the link', js: true do
+        fill_in 'Title', with: 'Title of the question'
+        fill_in 'Body', with: 'Content of the question'
+
+        click_on 'Add link'
+
+        fill_in 'Url', with: google_url
+
+        click_on 'Ask'
+
+        expect(page).to have_current_path(questions_path)
+
+        expect(page).to have_content 'Links name can\'t be blank'
+      end
+
+      scenario 'without filling in the url of the link', js: true do
+        fill_in 'Title', with: 'Title of the question'
+        fill_in 'Body', with: 'Content of the question'
+
+        click_on 'Add link'
+
+        fill_in 'Link name', with: 'Link to google'
+
+        click_on 'Ask'
+
+        expect(page).to have_current_path(questions_path)
+
+        expect(page).to have_content 'Links url can\'t be blank'
       end
     end
   end

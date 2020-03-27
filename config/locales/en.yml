@@ -8,12 +8,18 @@ en:
       answer:
         one: "Answer"
         other: "Answers"
+      link:
+        one: "Link"
+        other: "Links"
     attributes:
       question:
         title: "Title"
         body: "Body"
       answer:
         body: "Answer"
+      link:
+        name: "Link name"
+        url: "Url"
   helpers:
     submit:
       question:
@@ -30,6 +36,9 @@ en:
       answer:
         body: "Answer"
         files: "Attach files"
+      link:
+        name: "Link name"
+        url: "Url"
   questions:
     create:
       success: "Your question successfully created!"
@@ -68,6 +77,10 @@ en:
     logout: "Logout"
     signup: "Signup"
     login: "Login"
+  cocoon:
+    links:
+      add: "Add link"
+      remove: "Remove link"
   back: "Back"
   edit: "Edit"
   delete: "Delete"

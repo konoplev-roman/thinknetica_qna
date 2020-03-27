@@ -1,0 +1,12 @@
+div class='link nested-fields mb-3'
+  div class='form-row'
+    div class='col'
+      = f.label :name
+      = f.text_field :name, class: 'form-control'
+
+    div class='col-8'
+      = f.label :url
+      div class='input-group'
+        = f.text_field :url, class: 'form-control'
+        div class='input-group-append'
+          = link_to_remove_association f, class: 'btn btn-danger'

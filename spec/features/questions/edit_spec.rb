@@ -85,6 +85,78 @@ feature 'User can edit question', %(
       end
     end
 
+    describe 'with links' do
+      given!(:their_question_with_links) { create(:question, user: user) }
+      given!(:link) { create(:link, linkable: their_question_with_links) }
+      given(:google_url) { 'http://google.com/' }
+
+      background { visit question_path(their_question_with_links) }
+
+      scenario 'can add links to their question', js: true do
+        within '.question' do
+          click_on 'Edit'
+        end
+
+        within '.edit-question' do
+          click_on 'Add link'
+        end
+
+        # 3 index is used, as the 2 index - is a hidden identifier of the first reference
+        within '.edit-question .link:nth-child(3)' do
+          fill_in 'Link name', with: 'Link to google'
+          fill_in 'Url', with: google_url
+        end
+
+        within '.edit-question' do
+          click_on 'Save'
+        end
+
+        # this link was added earlier and should be saved
+        expect(page).to have_link link.name, href: link.url
+
+        # new link
+        expect(page).to have_link 'Link to google', href: google_url
+      end
+
+      scenario 'can update links from their question', js: true do
+        within '.question' do
+          click_on 'Edit'
+        end
+
+        within '.edit-question .link' do
+          fill_in 'Link name', with: 'Link to google'
+          fill_in 'Url', with: google_url
+        end
+
+        within '.edit-question' do
+          click_on 'Save'
+        end
+
+        # this link was added earlier and should be updated
+        expect(page).to have_no_link link.name, href: link.url
+
+        # new link
+        expect(page).to have_link 'Link to google', href: google_url
+      end
+
+      scenario 'can delete links from their question', js: true do
+        within '.question' do
+          click_on 'Edit'
+        end
+
+        within '.edit-question .link' do
+          click_on 'Remove link'
+        end
+
+        within '.edit-question' do
+          click_on 'Save'
+        end
+
+        # this link was added earlier and should be removed
+        expect(page).to have_no_link link.name, href: link.url
+      end
+    end
+
     describe 'cannot edit their question' do
       scenario 'without filling in the title field', js: true do
         within '.question' do
@@ -114,6 +186,44 @@ feature 'User can edit question', %(
         end
 
         expect(page).to have_content 'Body can\'t be blank'
+      end
+
+      describe 'with links' do
+        given!(:their_question_with_links) { create(:question, user: user) }
+        given!(:link) { create(:link, linkable: their_question_with_links) }
+        given(:google_url) { 'http://google.com/' }
+
+        background { visit question_path(their_question_with_links) }
+
+        scenario 'without filling in the name of the link', js: true do
+          within '.question' do
+            click_on 'Edit'
+          end
+
+          within '.edit-question' do
+            fill_in 'Link name', with: ''
+            fill_in 'Url', with: google_url
+
+            click_on 'Save'
+          end
+
+          expect(page).to have_content 'Links name can\'t be blank'
+        end
+
+        scenario 'without filling in the url of the link', js: true do
+          within '.question' do
+            click_on 'Edit'
+          end
+
+          within '.edit-question' do
+            fill_in 'Link name', with: 'New link'
+            fill_in 'Url', with: ''
+
+            click_on 'Save'
+          end
+
+          expect(page).to have_content 'Links url can\'t be blank'
+        end
       end
     end
 

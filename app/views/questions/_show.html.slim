@@ -12,6 +12,8 @@ div class='show-question'
 
   p = question.body
 
+  == render collection: question.links, partial: 'links/link'
+
   == render collection: question.files, partial: 'files/file'
 
 - if current_user&.author?(question)
