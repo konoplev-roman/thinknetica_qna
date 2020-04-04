@@ -224,6 +224,21 @@ feature 'User can edit question', %(
 
           expect(page).to have_content 'Links url can\'t be blank'
         end
+
+        scenario 'with invalid url of the link', js: true do
+          within '.question' do
+            click_on 'Edit'
+          end
+
+          within '.edit-question' do
+            fill_in 'Link name', with: 'New link'
+            fill_in 'Url', with: 'invalid url'
+
+            click_on 'Save'
+          end
+
+          expect(page).to have_content 'Links url is not a valid URL'
+        end
       end
     end
 

@@ -190,6 +190,21 @@ feature 'User can edit answer', %(
 
           expect(page).to have_content 'Links url can\'t be blank'
         end
+
+        scenario 'with invalid url of the link', js: true do
+          within "#answer-#{their_answer_with_links.id}" do
+            click_on 'Edit'
+
+            within '.link' do
+              fill_in 'Link name', with: 'Link to google'
+              fill_in 'Url', with: 'invalid url'
+            end
+
+            click_on 'Save'
+          end
+
+          expect(page).to have_content 'Links url is not a valid URL'
+        end
       end
     end
 

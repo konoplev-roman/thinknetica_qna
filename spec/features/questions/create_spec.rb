@@ -130,6 +130,22 @@ feature 'User can create question', %(
 
         expect(page).to have_content 'Links url can\'t be blank'
       end
+
+      scenario 'with invalid url of the link', js: true do
+        fill_in 'Title', with: 'Title of the question'
+        fill_in 'Body', with: 'Content of the question'
+
+        click_on 'Add link'
+
+        fill_in 'Link name', with: 'Link to google'
+        fill_in 'Url', with: 'invalid url'
+
+        click_on 'Ask'
+
+        expect(page).to have_current_path(questions_path)
+
+        expect(page).to have_content 'Links url is not a valid URL'
+      end
     end
   end
 

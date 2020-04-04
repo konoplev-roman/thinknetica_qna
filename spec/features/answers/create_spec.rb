@@ -122,6 +122,23 @@ feature 'User can answer the question', %(
 
         expect(page).to have_content 'Links url can\'t be blank'
       end
+
+      scenario 'with invalid url of the link', js: true do
+        within '.new-answer' do
+          fill_in 'Answer', with: 'Content of the answer'
+
+          click_on 'Add link'
+
+          fill_in 'Link name', with: 'Link to google'
+          fill_in 'Url', with: 'invalid url'
+
+          click_on 'Add link'
+
+          click_on 'Post Your Answer'
+        end
+
+        expect(page).to have_content 'Links url is not a valid URL'
+      end
     end
   end
 
