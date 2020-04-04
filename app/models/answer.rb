@@ -9,7 +9,7 @@ class Answer < ApplicationRecord
 
   accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
 
-  validates :question, :body, presence: true
+  validates :user, :question, :body, presence: true
   validates :best, uniqueness: { scope: :question_id }, if: :best?
 
   def best!
