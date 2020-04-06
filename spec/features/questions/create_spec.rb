@@ -75,7 +75,7 @@ feature 'User can create question', %(
       click_on 'Ask'
 
       expect(page).to have_link 'Link to google', href: google_url
-      expect(page).to have_link 'Link to gist', href: gist_url
+      expect(page).to have_link '1152c4e0e09e1f8616c278a1a4a214a3', href: gist_url
     end
 
     describe 'cannot ask a question' do
