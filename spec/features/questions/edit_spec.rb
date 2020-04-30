@@ -145,7 +145,7 @@ feature 'User can edit question', %(
         end
 
         within '.edit-question .link' do
-          click_on 'Remove link'
+          click_on 'Remove'
         end
 
         within '.edit-question' do
@@ -154,6 +154,60 @@ feature 'User can edit question', %(
 
         # this link was added earlier and should be removed
         expect(page).to have_no_link link.name, href: link.url
+      end
+    end
+
+    describe 'with award' do
+      given!(:their_question_with_award) { create(:question, :with_award, user: user) }
+      given!(:other_question_with_award) { create(:question, :with_award) }
+
+      background { visit question_path(their_question_with_award) }
+
+      scenario 'can update award from their question', js: true do
+        within '.question' do
+          click_on 'Edit'
+        end
+
+        within '.award' do
+          fill_in 'Award title', with: 'New award'
+
+          attach_file 'Attach image', Rails.root.join('spec/factories/images/thumb-up.png'), visible: false
+        end
+
+        within '.edit-question' do
+          click_on 'Save'
+        end
+
+        expect(page).to have_no_content 'Cool!'
+        expect(page).to have_no_css("img[src*='star.png']")
+
+        expect(page).to have_content 'New award'
+        expect(page).to have_css("img[src*='thumb-up.png']")
+      end
+
+      scenario 'can delete award from their question', js: true do
+        within '.question' do
+          click_on 'Edit'
+        end
+
+        within '.award' do
+          accept_alert { click_on 'Delete' }
+        end
+
+        within '.edit-question' do
+          click_on 'Save'
+        end
+
+        expect(page).to have_no_content 'Cool!'
+        expect(page).to have_no_css("img[src*='star.png']")
+      end
+
+      scenario 'does not see the award from someone else\'s question' do
+        visit question_path(other_question_with_award)
+
+        within '.question' do
+          expect(page).to have_no_content 'Cool!'
+        end
       end
     end
 
@@ -238,6 +292,62 @@ feature 'User can edit question', %(
           end
 
           expect(page).to have_content 'Links url is not a valid URL'
+        end
+      end
+
+      describe 'with award' do
+        given!(:their_question_with_award) { create(:question, user: user) }
+        given!(:award) { create(:award, question: their_question_with_award) }
+
+        background { visit question_path(their_question_with_award) }
+
+        scenario 'without filling in the title of the award', js: true do
+          within '.question' do
+            click_on 'Edit'
+          end
+
+          within '.edit-question' do
+            fill_in 'Award title', with: ''
+
+            click_on 'Save'
+          end
+
+          expect(page).to have_content 'Award title can\'t be blank'
+        end
+
+        scenario 'without filling in the image of the award', js: true do
+          within '.question' do
+            click_on 'Edit'
+          end
+
+          within '.award' do
+            accept_alert { click_on 'Delete' }
+
+            fill_in 'Award title', with: 'Cool!'
+          end
+
+          within '.edit-question' do
+            click_on 'Save'
+          end
+
+          expect(page).to have_content 'Award image can\'t be blank'
+        end
+
+        scenario 'with invalid image of the award', js: true do
+          within '.question' do
+            click_on 'Edit'
+          end
+
+          within '.edit-question' do
+            accept_alert { click_on 'Delete' }
+
+            fill_in 'Award title', with: 'Cool!'
+            attach_file 'Attach image', Rails.root.join('spec/rails_helper.rb'), visible: false
+
+            click_on 'Save'
+          end
+
+          expect(page).to have_content 'Award image has an invalid content type'
         end
       end
     end

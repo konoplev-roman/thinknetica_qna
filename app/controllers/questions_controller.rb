@@ -37,7 +37,12 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [], links_attributes: %i[id name url _destroy])
+    params.require(:question).permit(
+      :title, :body,
+      files: [],
+      links_attributes: %i[id name url _destroy],
+      award_attributes: %i[id title image]
+    )
   end
 
   def check_author!

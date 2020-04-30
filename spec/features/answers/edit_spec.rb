@@ -130,7 +130,7 @@ feature 'User can edit answer', %(
           click_on 'Edit'
 
           within '.link' do
-            click_on 'Remove link'
+            click_on 'Remove'
           end
 
           click_on 'Save'

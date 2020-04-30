@@ -1,0 +1,5 @@
+div class='media mb-3'
+  = image_tag award.image, alt: award.title, size: '64x64', class: 'mr-3'
+  div class='media-body'
+    h5 class='mt-0' = award.title
+    p = link_to award.question.title, award.question

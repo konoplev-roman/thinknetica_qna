@@ -35,6 +35,7 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'active_storage_validations'
 gem 'aws-sdk-s3', require: false
 gem 'cocoon'
 

@@ -12,4 +12,8 @@ class User < ApplicationRecord
   def author?(resource)
     resource.user_id == id
   end
+
+  def awards
+    Award.joins(:answer).where(answers: { user_id: id })
+  end
 end

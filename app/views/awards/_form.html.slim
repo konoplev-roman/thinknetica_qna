@@ -1,0 +1,19 @@
+div class='award nested-fields mb-3'
+  div class='form-row'
+    div class='col'
+      = f.label :title
+      = f.text_field :title, class: 'form-control'
+
+    - if f.object&.image&.attached?
+      div class='col-1 award-image-preview'
+        = image_tag f.object.image, size: '90x90'
+
+    div class='col-5'
+      = f.label :image
+      div class='input-group'
+        div class='custom-file'
+          = f.file_field :image, accept: 'image/png,image/jpg,image/jpeg', direct_upload: true, class: 'custom-file-input'
+          = f.label :image, class: 'custom-file-label'
+        - if f.object.persisted?
+          div class='input-group-append remove-award-link'
+            = link_to t('delete'), award_path(f.object), method: :delete, data: { confirm: t('are_you_sure') }, remote: true, class: 'btn btn-danger'

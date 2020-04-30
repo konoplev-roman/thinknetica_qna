@@ -25,6 +25,10 @@ div class='question-errors'
     div class='links mb-3'
       = link_to_add_association f, :links, class: 'btn btn-success', partial: 'links/form'
 
+  div id='awards'
+    = f.fields_for :award, question.award || question.build_award do |a|
+      = render 'awards/form', f: a
+
   hr class='mb-4'
 
   div class='d-flex bd-highlight mb-3'
