@@ -4,7 +4,6 @@ class Answer < ApplicationRecord
   belongs_to :user
   belongs_to :question
   has_many :links, as: :linkable, dependent: :destroy, inverse_of: :linkable
-  has_one :award, dependent: :destroy
 
   has_many_attached :files
 
@@ -17,7 +16,9 @@ class Answer < ApplicationRecord
     transaction do
       question.answers.update_all(best: false) # rubocop:disable SkipsModelValidations
 
-      update!(best: true, award: question.award)
+      question.award&.update!(user: user)
+
+      update!(best: true)
     end
   end
 end

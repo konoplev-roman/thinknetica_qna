@@ -13,7 +13,7 @@ feature 'User can choose the best answer', %(
 
   background do
     create(:answer, question: their_question, body: 'New best answer')
-    create(:answer, question: their_question, body: 'Old best answer', best: true)
+    create(:answer, question: their_question, body: 'Old best answer').best!
 
     create(:answer, question: other_question)
   end

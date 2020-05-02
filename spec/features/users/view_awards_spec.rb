@@ -7,25 +7,24 @@ feature 'User can view their awards', %(
   As an authenticated user
   I'd like to be able to see my awards
 ) do
-  given(:user1) { create(:user) }
-  given(:user2) { create(:user) }
+  given(:user) { create(:user) }
 
-  given(:question1) { create(:question, user: user2, title: 'Title of the first question') }
-  given(:question2) { create(:question, user: user2, title: 'Title of the second question') }
-  given(:question3) { create(:question, user: user1, title: 'Other question') }
-
-  given(:award1) { create(:award, question: question1, title: 'Title of the first award') }
-  given(:award2) { create(:award, question: question2, title: 'Title of the second award') }
-  given(:award3) { create(:award, question: question3, title: 'Other award') }
+  given(:question1) { create(:question, title: 'Title of the first question') }
+  given(:question2) { create(:question, title: 'Title of the second question') }
+  given(:question3) { create(:question, title: 'Other question') }
 
   background do
-    create(:answer, user: user1, question: question1, best: true, award: award1)
-    create(:answer, user: user1, question: question2, best: true, award: award2)
-    create(:answer, user: user2, question: question3, best: true, award: award3)
+    create(:award, question: question1, title: 'Title of the first award')
+    create(:award, question: question2, title: 'Title of the second award')
+    create(:award, question: question3, title: 'Other award')
+
+    create(:answer, user: user, question: question1).best!
+    create(:answer, user: user, question: question2).best!
+    create(:answer, question: question3).best!
   end
 
   describe 'Authenticated user' do
-    background { login(user1) }
+    background { login(user) }
 
     scenario 'can use the link to view the awards' do
       visit root_path

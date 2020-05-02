@@ -8,12 +8,9 @@ class User < ApplicationRecord
 
   has_many :questions, dependent: :destroy
   has_many :answers, dependent: :destroy
+  has_many :awards, dependent: :nullify
 
   def author?(resource)
     resource.user_id == id
-  end
-
-  def awards
-    Award.joins(:answer).where(answers: { user_id: id })
   end
 end

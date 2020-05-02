@@ -7,6 +7,6 @@ FactoryBot.define do
     title { 'Cool!' }
     image { fixture_file_upload(Rails.root.join('spec/factories/images/star.png')) }
 
-    answer { nil }
+    user { nil }
   end
 end
