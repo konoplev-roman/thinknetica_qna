@@ -77,16 +77,135 @@ feature 'User can edit answer', %(
       end
     end
 
-    scenario 'cannot edit their question without filling in the answer field', js: true do
-      within "#answer-#{their_answer.id}" do
-        click_on 'Edit'
+    describe 'with links' do
+      given!(:their_answer_with_links) { create(:answer, question: question, user: user) }
+      given!(:link) { create(:link, linkable: their_answer_with_links) }
+      given(:google_url) { 'http://google.com/' }
 
-        fill_in 'Answer', with: ''
+      background { visit question_path(question) }
 
-        click_on 'Save'
+      scenario 'can add links to their answer', js: true do
+        within "#answer-#{their_answer_with_links.id}" do
+          click_on 'Edit'
+
+          click_on 'Add link'
+
+          # 3 index is used, as the 2 index - is a hidden identifier of the first reference
+          within '.link:nth-child(3)' do
+            fill_in 'Link name', with: 'Link to google'
+            fill_in 'Url', with: google_url
+          end
+
+          click_on 'Save'
+
+          # this link was added earlier and should be saved
+          expect(page).to have_link link.name, href: link.url
+
+          # new link
+          expect(page).to have_link 'Link to google', href: google_url
+        end
       end
 
-      expect(page).to have_content 'Answer can\'t be blank'
+      scenario 'can update links from their question', js: true do
+        within "#answer-#{their_answer_with_links.id}" do
+          click_on 'Edit'
+
+          within '.link' do
+            fill_in 'Link name', with: 'Link to google'
+            fill_in 'Url', with: google_url
+          end
+
+          click_on 'Save'
+
+          # this link was added earlier and should be updated
+          expect(page).to have_no_link link.name, href: link.url
+
+          # new link
+          expect(page).to have_link 'Link to google', href: google_url
+        end
+      end
+
+      scenario 'can delete links from their question', js: true do
+        within "#answer-#{their_answer_with_links.id}" do
+          click_on 'Edit'
+
+          within '.link' do
+            click_on 'Remove'
+          end
+
+          click_on 'Save'
+
+          # this link was added earlier and should be removed
+          expect(page).to have_no_link link.name, href: link.url
+        end
+      end
+    end
+
+    describe 'cannot edit their answer' do
+      scenario 'without filling in the answer field', js: true do
+        within "#answer-#{their_answer.id}" do
+          click_on 'Edit'
+
+          fill_in 'Answer', with: ''
+
+          click_on 'Save'
+        end
+
+        expect(page).to have_content 'Answer can\'t be blank'
+      end
+
+      describe 'with links' do
+        given!(:their_answer_with_links) { create(:answer, question: question, user: user) }
+        given!(:link) { create(:link, linkable: their_answer_with_links) }
+        given(:google_url) { 'http://google.com/' }
+
+        background { visit question_path(question) }
+
+        scenario 'without filling in the name of the link', js: true do
+          within "#answer-#{their_answer_with_links.id}" do
+            click_on 'Edit'
+
+            within '.link' do
+              fill_in 'Link name', with: ''
+              fill_in 'Url', with: google_url
+            end
+
+            click_on 'Save'
+          end
+
+          expect(page).to have_content 'Links name can\'t be blank'
+        end
+
+        scenario 'without filling in the url of the link', js: true do
+          within "#answer-#{their_answer_with_links.id}" do
+            click_on 'Edit'
+
+            within '.link' do
+              fill_in 'Link name', with: 'Link to google'
+              fill_in 'Url', with: ''
+            end
+
+            click_on 'Save'
+          end
+
+          expect(page).to have_content 'Links url can\'t be blank'
+        end
+
+        scenario 'with invalid url of the link', js: true do
+          within "#answer-#{their_answer_with_links.id}" do
+            click_on 'Edit'
+
+            within '.link' do
+              fill_in 'Link name', with: 'Link to google'
+              fill_in 'Url', with: 'invalid url'
+            end
+
+            click_on 'Save'
+          end
+
+          expect(page).to have_content 'Links url is not a valid URL'
+        end
+      end
     end
 
     scenario 'does not see the link to edit someone else\'s answer' do

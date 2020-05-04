@@ -17,7 +17,7 @@ feature 'User can delete question', %(
     scenario 'can delete their question' do
       visit question_path(their_question)
 
-      within '.question' do
+      within '.show-question' do
         click_on 'Delete'
       end
 
@@ -33,7 +33,7 @@ feature 'User can delete question', %(
     scenario 'does not see the link to delete someone else\'s question' do
       visit question_path(other_question)
 
-      within '.question' do
+      within '.show-question' do
         expect(page).to have_no_content 'Delete'
       end
     end
@@ -43,7 +43,7 @@ feature 'User can delete question', %(
     background { visit question_path(other_question) }
 
     scenario 'does not see the link to delete a question' do
-      within '.question' do
+      within '.show-question' do
         expect(page).to have_no_content 'Delete'
       end
     end

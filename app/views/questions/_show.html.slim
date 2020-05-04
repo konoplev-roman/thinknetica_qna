@@ -12,7 +12,16 @@ div class='show-question'
 
   p = question.body
 
+  == render collection: question.links, partial: 'links/link'
+
   == render collection: question.files, partial: 'files/file'
+
+  - if current_user&.author?(question) && question.award.present?
+    div class='media mb-3'
+      = image_tag question.award.image, alt: question.award.title, size: '64x64', class: 'mr-3'
+      div class='media-body'
+        h5 class='mt-0' = question.award.title
+        = t('award.best_answer')
 
 - if current_user&.author?(question)
   div class='edit-question d-none'

@@ -14,6 +14,13 @@ div class='answer-errors'
     = f.file_field :files, multiple: true, direct_upload: true, class: 'custom-file-input'
     = f.label :files, class: 'custom-file-label'
 
+  div id='links'
+    = f.fields_for :links do |link|
+      = render 'links/form', f: link
+
+    div class='links mb-3'
+      = link_to_add_association f, :links, class: 'btn btn-success', partial: 'links/form'
+
   hr class='mb-4'
 
   div class='d-flex bd-highlight mb-3'

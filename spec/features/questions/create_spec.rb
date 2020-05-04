@@ -9,6 +9,8 @@ feature 'User can create question', %(
 ) do
   describe 'Authenticated user' do
     given(:user) { create(:user) }
+    given(:google_url) { 'http://google.com/' }
+    given(:gist_url) { 'https://gist.github.com/konoplev-roman/1152c4e0e09e1f8616c278a1a4a214a3' }
 
     background { login(user) }
 
@@ -23,8 +25,10 @@ feature 'User can create question', %(
     scenario 'can ask a question with valid attributes' do
       visit new_question_path
 
-      fill_in 'Title', with: 'Title of the question'
-      fill_in 'Body', with: 'Content of the question'
+      within '.edit-question' do
+        fill_in 'Title', with: 'Title of the question'
+        fill_in 'Body', with: 'Content of the question'
+      end
 
       click_on 'Ask'
 
@@ -39,8 +43,10 @@ feature 'User can create question', %(
     scenario 'can attach a file by asking a question' do
       visit new_question_path
 
-      fill_in 'Title', with: 'Title of the question'
-      fill_in 'Body', with: 'Content of the question'
+      within '.edit-question' do
+        fill_in 'Title', with: 'Title of the question'
+        fill_in 'Body', with: 'Content of the question'
+      end
 
       attach_file 'Attach files', [Rails.root.join('spec/rails_helper.rb'), Rails.root.join('spec/spec_helper.rb')]
 
@@ -50,11 +56,61 @@ feature 'User can create question', %(
       expect(page).to have_content 'spec_helper.rb'
     end
 
+    scenario 'can add links by asking a question', js: true do
+      visit new_question_path
+
+      within '.edit-question' do
+        fill_in 'Title', with: 'Title of the question'
+        fill_in 'Body', with: 'Content of the question'
+      end
+
+      click_on 'Add link'
+
+      within '.link:nth-child(1)' do
+        fill_in 'Link name', with: 'Link to google'
+        fill_in 'Url', with: google_url
+      end
+
+      click_on 'Add link'
+
+      within '.link:nth-child(2)' do
+        fill_in 'Link name', with: 'Link to gist'
+        fill_in 'Url', with: gist_url
+      end
+
+      click_on 'Ask'
+
+      expect(page).to have_link 'Link to google', href: google_url
+      expect(page).to have_link '1152c4e0e09e1f8616c278a1a4a214a3', href: gist_url
+    end
+
+    scenario 'can add award for best answer by asking a question', js: true do
+      visit new_question_path
+
+      within '.edit-question' do
+        fill_in 'Title', with: 'Title of the question'
+        fill_in 'Body', with: 'Content of the question'
+      end
+
+      within '.award' do
+        fill_in 'Award title', with: 'Cool!'
+
+        attach_file 'Attach image', Rails.root.join('spec/factories/images/thumb-up.png'), visible: false
+      end
+
+      click_on 'Ask'
+
+      expect(page).to have_content 'Cool!'
+      expect(page).to have_css("img[src*='thumb-up.png']")
+    end
+
     describe 'cannot ask a question' do
       background { visit new_question_path }
 
       scenario 'without filling in the title field' do
-        fill_in 'Body', with: 'Content of the question'
+        within '.edit-question' do
+          fill_in 'Body', with: 'Content of the question'
+        end
 
         click_on 'Ask'
 
@@ -64,13 +120,119 @@ feature 'User can create question', %(
       end
 
       scenario 'without filling in the body field' do
-        fill_in 'Title', with: 'Title of the question'
+        within '.edit-question' do
+          fill_in 'Title', with: 'Title of the question'
+        end
 
         click_on 'Ask'
 
         expect(page).to have_current_path(questions_path)
 
         expect(page).to have_content 'Body can\'t be blank'
+      end
+
+      scenario 'without filling in the name of the link', js: true do
+        within '.edit-question' do
+          fill_in 'Title', with: 'Title of the question'
+          fill_in 'Body', with: 'Content of the question'
+        end
+
+        click_on 'Add link'
+
+        fill_in 'Url', with: google_url
+
+        click_on 'Ask'
+
+        expect(page).to have_current_path(questions_path)
+
+        expect(page).to have_content 'Links name can\'t be blank'
+      end
+
+      scenario 'without filling in the url of the link', js: true do
+        within '.edit-question' do
+          fill_in 'Title', with: 'Title of the question'
+          fill_in 'Body', with: 'Content of the question'
+        end
+
+        click_on 'Add link'
+
+        fill_in 'Link name', with: 'Link to google'
+
+        click_on 'Ask'
+
+        expect(page).to have_current_path(questions_path)
+
+        expect(page).to have_content 'Links url can\'t be blank'
+      end
+
+      scenario 'with invalid url of the link', js: true do
+        within '.edit-question' do
+          fill_in 'Title', with: 'Title of the question'
+          fill_in 'Body', with: 'Content of the question'
+        end
+
+        click_on 'Add link'
+
+        fill_in 'Link name', with: 'Link to google'
+        fill_in 'Url', with: 'invalid url'
+
+        click_on 'Ask'
+
+        expect(page).to have_current_path(questions_path)
+
+        expect(page).to have_content 'Links url is not a valid URL'
+      end
+
+      scenario 'without filling in the title of the award', js: true do
+        within '.edit-question' do
+          fill_in 'Title', with: 'Title of the question'
+          fill_in 'Body', with: 'Content of the question'
+        end
+
+        within '.award' do
+          attach_file 'Attach image', Rails.root.join('spec/factories/images/thumb-up.png'), visible: false
+        end
+
+        click_on 'Ask'
+
+        expect(page).to have_current_path(questions_path)
+
+        expect(page).to have_content 'Award title can\'t be blank'
+      end
+
+      scenario 'without filling in the image of the award', js: true do
+        within '.edit-question' do
+          fill_in 'Title', with: 'Title of the question'
+          fill_in 'Body', with: 'Content of the question'
+        end
+
+        within '.award' do
+          fill_in 'Award title', with: 'Cool!'
+        end
+
+        click_on 'Ask'
+
+        expect(page).to have_current_path(questions_path)
+
+        expect(page).to have_content 'Award image can\'t be blank'
+      end
+
+      scenario 'with invalid image of the award', js: true do
+        within '.edit-question' do
+          fill_in 'Title', with: 'Title of the question'
+          fill_in 'Body', with: 'Content of the question'
+        end
+
+        within '.award' do
+          fill_in 'Award title', with: 'Cool!'
+          attach_file 'Attach image', Rails.root.join('spec/rails_helper.rb'), visible: false
+        end
+
+        click_on 'Ask'
+
+        expect(page).to have_current_path(questions_path)
+
+        expect(page).to have_content 'Award image has an invalid content type'
       end
     end
   end

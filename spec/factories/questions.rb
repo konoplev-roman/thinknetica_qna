@@ -19,5 +19,9 @@ FactoryBot.define do
         ]
       end
     end
+
+    trait :with_award do
+      award
+    end
   end
 end

@@ -35,7 +35,9 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'active_storage_validations'
 gem 'aws-sdk-s3', require: false
+gem 'cocoon'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
@@ -44,6 +46,7 @@ gem 'decent_exposure', '3.0.0'
 gem 'devise'
 gem 'jquery-rails'
 gem 'slim-rails'
+gem 'validate_url'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

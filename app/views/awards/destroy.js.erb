@@ -1,0 +1,7 @@
+$('#flash-messages').html('<%= render 'shared/flash' %>');
+
+<% if award.destroyed? %>
+  $('#awards input').val('');
+  $('.award-image-preview').remove();
+  $('.remove-award-link').remove();
+<% end %>

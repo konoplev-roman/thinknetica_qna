@@ -8,12 +8,24 @@ en:
       answer:
         one: "Answer"
         other: "Answers"
+      link:
+        one: "Link"
+        other: "Links"
+      award:
+        one: "Award"
+        other: "Awards"
     attributes:
       question:
         title: "Title"
         body: "Body"
       answer:
         body: "Answer"
+      link:
+        name: "Link name"
+        url: "Url"
+      award:
+        title: "Award title"
+        image: "Award image"
   helpers:
     submit:
       question:
@@ -30,6 +42,12 @@ en:
       answer:
         body: "Answer"
         files: "Attach files"
+      link:
+        name: "Link name"
+        url: "Url"
+      award:
+        title: "Award title"
+        image: "Attach image"
   questions:
     create:
       success: "Your question successfully created!"
@@ -54,6 +72,9 @@ en:
       success: "Your answer successfully updated!"
     best:
       success: "You have successfully chosen the best answer!"
+  awards:
+    destroy:
+      success: "Your award successfully removed!"
   files:
     destroy:
       success: "Your file successfully removed!"
@@ -68,7 +89,17 @@ en:
     logout: "Logout"
     signup: "Signup"
     login: "Login"
+    awards: "Awards"
+  cocoon:
+    defaults:
+      remove: "Remove"
+    links:
+      add: "Add link"
+    award:
+      add: "Add award"
   back: "Back"
   edit: "Edit"
   delete: "Delete"
   are_you_sure: "Are you sure?"
+  award:
+    best_answer: "You have appointed an award for the best answer"
