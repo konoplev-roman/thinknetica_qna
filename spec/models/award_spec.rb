@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Award, type: :model do
+describe Award do
   it { is_expected.to belong_to(:question) }
   it { is_expected.to belong_to(:user).optional }
 

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe FilesController, type: :controller do
+describe FilesController do
   let(:user) { create(:user) }
 
   describe 'DELETE #destroy' do

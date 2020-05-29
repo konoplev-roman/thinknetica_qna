@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ApplicationHelper do
+describe ApplicationHelper do
   describe '#flash_class' do
     it 'return styles for notices' do
       expect(helper.flash_class(:notice)).to eq('my-3 alert alert-info')

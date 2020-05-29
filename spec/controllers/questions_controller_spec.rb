@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe QuestionsController, type: :controller do
+describe QuestionsController do
   let(:user) { create(:user) }
 
   describe 'POST #create' do

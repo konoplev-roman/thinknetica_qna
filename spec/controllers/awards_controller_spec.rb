@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe AwardsController, type: :controller do
+describe AwardsController do
   let(:user) { create(:user) }
 
   describe 'DELETE #destroy' do
