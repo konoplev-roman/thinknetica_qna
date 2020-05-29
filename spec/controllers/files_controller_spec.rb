@@ -3,14 +3,12 @@
 require 'rails_helper'
 
 describe FilesController do
-  let(:user) { create(:user) }
-
   describe 'DELETE #destroy' do
     subject(:destroy_request) { delete :destroy, params: { id: resource.files.first }, format: :js }
 
-    context 'without authentication' do
-      let!(:resource) { create(:question, :with_files) }
+    let!(:resource) { create(:question, :with_files, user: user) }
 
+    context 'without authentication', :without_auth do
       it 'does not delete the file' do
         expect { destroy_request }.not_to change(resource.files, :count)
       end
@@ -23,10 +21,6 @@ describe FilesController do
     end
 
     context 'with own resource' do
-      before { login(user) }
-
-      let!(:resource) { create(:question, :with_files, user: user) }
-
       it 'deletes the file' do
         expect { destroy_request }.to change(resource.files, :count).by(-1)
       end
@@ -39,9 +33,7 @@ describe FilesController do
     end
 
     context 'with someone else\'s resource' do
-      before { login(user) }
-
-      let!(:resource) { create(:question, :with_files) }
+      let!(:resource) { create(:question, :with_files, user: john) }
 
       it 'does not delete the file' do
         expect { destroy_request }.not_to change(resource.files, :count)

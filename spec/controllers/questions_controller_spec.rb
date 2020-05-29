@@ -3,15 +3,13 @@
 require 'rails_helper'
 
 describe QuestionsController do
-  let(:user) { create(:user) }
-
   describe 'POST #create' do
     subject(:create_request) { post :create, params: params }
 
     let(:form_params) { {} }
     let(:params) { { question: attributes_for(:question).merge(form_params) } }
 
-    context 'without authentication' do
+    context 'without authentication', :without_auth do
       it 'does not save the question' do
         expect { create_request }.not_to change(Question, :count)
       end
@@ -24,8 +22,6 @@ describe QuestionsController do
     end
 
     context 'with valid attributes' do
-      before { login(user) }
-
       it 'saves a new question in the database' do
         expect { create_request }.to change(Question, :count).by(1)
       end
@@ -50,8 +46,6 @@ describe QuestionsController do
     context 'with invalid attributes' do
       let(:form_params) { attributes_for(:question, :invalid) }
 
-      before { login(user) }
-
       it 'does not save the question' do
         expect { create_request }.not_to change(Question, :count)
       end
@@ -67,6 +61,8 @@ describe QuestionsController do
   describe 'PATCH #update' do
     subject(:update_request) { patch :update, params: params }
 
+    let!(:question) { create(:question, user: user) }
+
     let(:form_params) { {} }
     let(:params) do
       {
@@ -76,9 +72,7 @@ describe QuestionsController do
       }
     end
 
-    context 'without authentication' do
-      let!(:question) { create(:question) }
-
+    context 'without authentication', :without_auth do
       before { update_request }
 
       it 'does not change question attributes', :aggregate_failures do
@@ -94,13 +88,7 @@ describe QuestionsController do
     end
 
     context 'with own question with valid attributes' do
-      let!(:question) { create(:question, user: user) }
-
-      before do
-        login(user)
-
-        update_request
-      end
+      before { update_request }
 
       it 'changes question attributes', :aggregate_failures do
         question.reload
@@ -115,15 +103,9 @@ describe QuestionsController do
     end
 
     context 'with own question with invalid attributes' do
-      let!(:question) { create(:question, user: user) }
-
       let(:form_params) { attributes_for(:question, :invalid) }
 
-      before do
-        login(user)
-
-        update_request
-      end
+      before { update_request }
 
       it 'does not change question attributes', :aggregate_failures do
         question.reload
@@ -138,13 +120,9 @@ describe QuestionsController do
     end
 
     context 'with someone else\'s question' do
-      let!(:question) { create(:question) }
+      let!(:question) { create(:question, user: john) }
 
-      before do
-        login(user)
-
-        update_request
-      end
+      before { update_request }
 
       it 'does not change question attributes', :aggregate_failures do
         question.reload
@@ -162,9 +140,9 @@ describe QuestionsController do
   describe 'DELETE #destroy' do
     subject(:destroy_request) { delete :destroy, params: { id: question } }
 
-    context 'without authentication' do
-      let!(:question) { create(:question) } # rubocop:disable RSpec/LetSetup
+    let!(:question) { create(:question, user: user) }
 
+    context 'without authentication', :without_auth do
       it 'does not delete the question' do
         expect { destroy_request }.not_to change(Question, :count)
       end
@@ -177,10 +155,6 @@ describe QuestionsController do
     end
 
     context 'with own question' do
-      before { login(user) }
-
-      let!(:question) { create(:question, user: user) } # rubocop:disable RSpec/LetSetup
-
       it 'deletes the question' do
         expect { destroy_request }.to change(Question, :count).by(-1)
       end
@@ -193,9 +167,7 @@ describe QuestionsController do
     end
 
     context 'with someone else\'s question' do
-      before { login(user) }
-
-      let!(:question) { create(:question) } # rubocop:disable RSpec/LetSetup
+      let!(:question) { create(:question, user: john) } # rubocop:disable RSpec/LetSetup
 
       it 'does not delete the question' do
         expect { destroy_request }.not_to change(Question, :count)
