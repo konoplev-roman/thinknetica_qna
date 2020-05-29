@@ -6,15 +6,17 @@ RSpec.describe AwardsController, type: :controller do
   let(:user) { create(:user) }
 
   describe 'DELETE #destroy' do
+    subject(:destroy_request) { delete :destroy, params: { id: question.award }, format: :js }
+
     context 'without authentication' do
-      let!(:award) { create(:award) }
+      let!(:question) { create(:question, :with_award) } # rubocop:disable RSpec/LetSetup
 
       it 'does not delete the award' do
-        expect { delete :destroy, params: { id: award } }.not_to change(Award, :count)
+        expect { destroy_request }.not_to change(Award, :count)
       end
 
       it 'returns a unauthorized status code' do
-        delete :destroy, params: { id: award }, format: :js
+        destroy_request
 
         expect(response).to have_http_status(:unauthorized)
       end
@@ -26,15 +28,15 @@ RSpec.describe AwardsController, type: :controller do
       let!(:question) { create(:question, :with_award, user: user) }
 
       it 'deletes the award' do
-        delete :destroy, params: { id: question.award }, format: :js
+        destroy_request
 
         question.reload
 
         expect(question.award).to be_nil
       end
 
-      it 'renders destroy file view' do
-        delete :destroy, params: { id: question.award }, format: :js
+      it 'renders destroy award view' do
+        destroy_request
 
         expect(response).to render_template :destroy
       end
@@ -45,8 +47,8 @@ RSpec.describe AwardsController, type: :controller do
 
       let!(:question) { create(:question, :with_award) }
 
-      it 'does not delete the file' do
-        delete :destroy, params: { id: question.award }, format: :js
+      it 'does not delete the award' do
+        destroy_request
 
         question.reload
 
@@ -54,7 +56,7 @@ RSpec.describe AwardsController, type: :controller do
       end
 
       it 'returns a forbidden status code' do
-        delete :destroy, params: { id: question.award }, format: :js
+        destroy_request
 
         expect(response).to have_http_status(:forbidden)
       end
