@@ -2,15 +2,15 @@
 
 class Answer < ApplicationRecord
   include BelongsToUser
+  include BelongsToQuestion
 
-  belongs_to :question
   has_many :links, as: :linkable, dependent: :destroy, inverse_of: :linkable
 
   has_many_attached :files
 
   accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
 
-  validates :question, :body, presence: true
+  validates :body, presence: true
   validates :best, uniqueness: { scope: :question_id }, if: :best?
 
   def best!
