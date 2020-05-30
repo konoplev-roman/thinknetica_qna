@@ -9,4 +9,8 @@ module FeatureHelpers
 
     click_on 'Log in'
   end
+
+  def sign_out(_user)
+    click_on 'Logout'
+  end
 end

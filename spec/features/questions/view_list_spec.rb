@@ -18,16 +18,20 @@ feature 'User can view the list of questions', %(
     given!(:question1) { create(:question, title: 'Title of the first question', body: 'Body of the first question') }
     given!(:question2) { create(:question, title: 'Title of the second question', body: 'Body of the second question') }
 
-    scenario 'User can view a list of questions' do
+    scenario 'user can view a list of questions' do
       visit questions_path
 
       expect(page).to have_no_content 'No questions yet. Maybe you have something to ask?'
 
-      expect(page).to have_link 'Title of the first question', href: question_path(question1)
-      expect(page).to have_content 'Body of the first question'
+      within '.card:nth-child(1)' do
+        expect(page).to have_link 'Title of the first question', href: question_path(question1)
+        expect(page).to have_content 'Body of the first question'
+      end
 
-      expect(page).to have_link 'Title of the second question', href: question_path(question2)
-      expect(page).to have_content 'Body of the second question'
+      within '.card:nth-child(2)' do
+        expect(page).to have_link 'Title of the second question', href: question_path(question2)
+        expect(page).to have_content 'Body of the second question'
+      end
 
       expect(page).to have_css('.card', count: 2)
     end

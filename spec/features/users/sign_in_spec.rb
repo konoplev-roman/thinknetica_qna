@@ -7,9 +7,7 @@ feature 'User can sign in', %(
   As an unauthenticated user
   I'd like to be able to sign in
 ) do
-  given(:user) { create(:user) }
-
-  describe 'Guest' do
+  describe 'Guest', :without_auth do
     scenario 'can use the login link' do
       visit root_path
 
@@ -27,12 +25,7 @@ feature 'User can sign in', %(
     end
 
     scenario 'can login with valid attributes' do
-      visit new_user_session_path
-
-      fill_in 'Email', with: user.email
-      fill_in 'Password', with: user.password
-
-      click_on 'Log in'
+      login(user)
 
       expect(page).to have_current_path(root_path)
 
@@ -77,8 +70,6 @@ feature 'User can sign in', %(
   end
 
   describe 'Authenticated user' do
-    background { login(user) }
-
     scenario 'does not see the login link' do
       visit root_path
 
