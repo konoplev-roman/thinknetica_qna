@@ -5,12 +5,9 @@ require 'rails_helper'
 describe Answer do
   it_behaves_like 'belong to user'
   it_behaves_like 'belong to question'
-
-  it { is_expected.to have_many(:links).dependent(:destroy) }
+  it_behaves_like 'linkable'
 
   it { is_expected.to validate_presence_of :body }
-
-  it { is_expected.to accept_nested_attributes_for :links }
 
   it 'have many attached files' do
     expect(described_class.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
