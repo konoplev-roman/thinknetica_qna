@@ -6,22 +6,22 @@ describe AwardsController do
   describe 'DELETE #destroy' do
     let!(:question) { create(:question, :with_award, user: user) }
 
-    let(:http_request) { delete :destroy, params: { id: question.award }, format: :js }
+    let(:do_request) { delete :destroy, params: { id: question.award }, format: :js }
 
     context 'without authentication', :without_auth do
       it 'does not delete the award' do
-        expect { http_request }.not_to change(Award, :count)
+        expect { do_request }.not_to change(Award, :count)
       end
 
       it 'returns a unauthorized status code' do
-        http_request
+        do_request
 
         expect(response).to have_http_status(:unauthorized)
       end
     end
 
     context 'with own resource' do
-      before { http_request }
+      before { do_request }
 
       it 'deletes the award' do
         question.reload
@@ -37,7 +37,7 @@ describe AwardsController do
     context 'with someone else\'s resource' do
       let!(:question) { create(:question, :with_award, user: john) }
 
-      before { http_request }
+      before { do_request }
 
       it 'does not delete the award' do
         question.reload

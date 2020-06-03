@@ -6,7 +6,7 @@ describe AnswersController do
   let(:question) { create(:question, user: john) }
 
   describe 'POST #create' do
-    let(:http_request) do
+    let(:do_request) do
       post :create,
            params: { question_id: question, answer: attributes_for(:answer).merge(params) },
            format: :js
@@ -15,11 +15,11 @@ describe AnswersController do
 
     context 'without authentication', :without_auth do
       it 'does not save the answer' do
-        expect { http_request }.not_to change(Answer, :count)
+        expect { do_request }.not_to change(Answer, :count)
       end
 
       it 'returns a unauthorized status code' do
-        http_request
+        do_request
 
         expect(response).to have_http_status(:unauthorized)
       end
@@ -27,11 +27,11 @@ describe AnswersController do
 
     context 'with valid attributes' do
       it 'saves a new answer in the database' do
-        expect { http_request }.to change(Answer, :count).by(1)
+        expect { do_request }.to change(Answer, :count).by(1)
       end
 
       it 'saves a new answer nested to the current user and question', :aggregate_failures do
-        http_request
+        do_request
 
         created_answer = Answer.order(id: :desc).first
 
@@ -40,7 +40,7 @@ describe AnswersController do
       end
 
       it 'renders create answer view' do
-        http_request
+        do_request
 
         expect(response).to render_template :create
       end
@@ -50,11 +50,11 @@ describe AnswersController do
       let(:params) { attributes_for(:answer, :invalid) }
 
       it 'does not save the answer' do
-        expect { http_request }.not_to change(Answer, :count)
+        expect { do_request }.not_to change(Answer, :count)
       end
 
       it 'renders create answer view' do
-        http_request
+        do_request
 
         expect(response).to render_template :create
       end
@@ -64,7 +64,7 @@ describe AnswersController do
   describe 'PATCH #update' do
     let!(:answer) { create(:answer, question: question, user: user) }
 
-    let(:http_request) do
+    let(:do_request) do
       patch :update,
             params: { id: answer, answer: { body: 'new body' }.merge(params) },
             format: :js
@@ -72,7 +72,7 @@ describe AnswersController do
     let(:params) { {} }
 
     context 'without authentication', :without_auth do
-      before { http_request }
+      before { do_request }
 
       it 'does not change answer attribute body' do
         answer.reload
@@ -86,7 +86,7 @@ describe AnswersController do
     end
 
     context 'with own answer with valid attributes' do
-      before { http_request }
+      before { do_request }
 
       it 'changes answer attribute body' do
         answer.reload
@@ -102,7 +102,7 @@ describe AnswersController do
     context 'with own answer with invalid attributes' do
       let(:params) { attributes_for(:answer, :invalid) }
 
-      before { http_request }
+      before { do_request }
 
       it 'does not change answer attribute body' do
         answer.reload
@@ -118,7 +118,7 @@ describe AnswersController do
     context 'with someone else\'s answer' do
       let!(:answer) { create(:answer, question: question, user: john) }
 
-      before { http_request }
+      before { do_request }
 
       it 'does not change answer attribute body' do
         answer.reload
@@ -135,10 +135,10 @@ describe AnswersController do
   describe 'PATCH #best' do
     let!(:answer) { create(:answer, question: question) }
 
-    let(:http_request) { patch :best, params: { id: answer }, format: :js }
+    let(:do_request) { patch :best, params: { id: answer }, format: :js }
 
     context 'without authentication', :without_auth do
-      before { http_request }
+      before { do_request }
 
       it 'does not save answer as the best' do
         answer.reload
@@ -154,7 +154,7 @@ describe AnswersController do
     context 'with the answer to own question' do
       let(:question) { create(:question, user: user) }
 
-      before { http_request }
+      before { do_request }
 
       it 'saves answer as the best' do
         answer.reload
@@ -168,7 +168,7 @@ describe AnswersController do
     end
 
     context 'with the answer to someone else\'s question' do
-      before { http_request }
+      before { do_request }
 
       it 'does not save answer as the best' do
         answer.reload
@@ -185,15 +185,15 @@ describe AnswersController do
   describe 'DELETE #destroy' do
     let!(:answer) { create(:answer, user: user, question: question) }
 
-    let(:http_request) { delete :destroy, params: { id: answer }, format: :js }
+    let(:do_request) { delete :destroy, params: { id: answer }, format: :js }
 
     context 'without authentication', :without_auth do
       it 'does not delete the answer' do
-        expect { http_request }.not_to change(Answer, :count)
+        expect { do_request }.not_to change(Answer, :count)
       end
 
       it 'returns a unauthorized status code' do
-        http_request
+        do_request
 
         expect(response).to have_http_status(:unauthorized)
       end
@@ -201,11 +201,11 @@ describe AnswersController do
 
     context 'with own answer' do
       it 'deletes the answer' do
-        expect { http_request }.to change(Answer, :count).by(-1)
+        expect { do_request }.to change(Answer, :count).by(-1)
       end
 
       it 'renders destroy answer view' do
-        http_request
+        do_request
 
         expect(response).to render_template :destroy
       end
@@ -215,11 +215,11 @@ describe AnswersController do
       let!(:answer) { create(:answer, user: john, question: question) } # rubocop:disable RSpec/LetSetup
 
       it 'does not delete the answer' do
-        expect { http_request }.not_to change(Answer, :count)
+        expect { do_request }.not_to change(Answer, :count)
       end
 
       it 'returns a forbidden status code' do
-        http_request
+        do_request
 
         expect(response).to have_http_status(:forbidden)
       end

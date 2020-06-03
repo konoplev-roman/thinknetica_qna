@@ -4,16 +4,16 @@ require 'rails_helper'
 
 describe QuestionsController do
   describe 'POST #create' do
-    let(:http_request) { post :create, params: { question: attributes_for(:question).merge(params) } }
+    let(:do_request) { post :create, params: { question: attributes_for(:question).merge(params) } }
     let(:params) { {} }
 
     context 'without authentication', :without_auth do
       it 'does not save the question' do
-        expect { http_request }.not_to change(Question, :count)
+        expect { do_request }.not_to change(Question, :count)
       end
 
       it 're-renders show login view' do
-        http_request
+        do_request
 
         expect(response).to redirect_to new_user_session_path
       end
@@ -21,11 +21,11 @@ describe QuestionsController do
 
     context 'with valid attributes' do
       it 'saves a new question in the database' do
-        expect { http_request }.to change(Question, :count).by(1)
+        expect { do_request }.to change(Question, :count).by(1)
       end
 
       it 'saves a new question nested to the current user' do
-        http_request
+        do_request
 
         created_question = Question.order(id: :desc).first
 
@@ -33,7 +33,7 @@ describe QuestionsController do
       end
 
       it 'redirects to show view' do
-        http_request
+        do_request
 
         created_question = Question.order(id: :desc).first
 
@@ -45,11 +45,11 @@ describe QuestionsController do
       let(:params) { attributes_for(:question, :invalid) }
 
       it 'does not save the question' do
-        expect { http_request }.not_to change(Question, :count)
+        expect { do_request }.not_to change(Question, :count)
       end
 
       it 're-renders new view' do
-        http_request
+        do_request
 
         expect(response).to render_template :new
       end
@@ -59,7 +59,7 @@ describe QuestionsController do
   describe 'PATCH #update' do
     let!(:question) { create(:question, user: user) }
 
-    let(:http_request) do
+    let(:do_request) do
       patch :update,
             params: { id: question, question: { title: 'new title', body: 'new body' }.merge(params) },
             format: :js
@@ -67,7 +67,7 @@ describe QuestionsController do
     let(:params) { {} }
 
     context 'without authentication', :without_auth do
-      before { http_request }
+      before { do_request }
 
       it 'does not change question attributes', :aggregate_failures do
         question.reload
@@ -82,7 +82,7 @@ describe QuestionsController do
     end
 
     context 'with own question with valid attributes' do
-      before { http_request }
+      before { do_request }
 
       it 'changes question attributes', :aggregate_failures do
         question.reload
@@ -99,7 +99,7 @@ describe QuestionsController do
     context 'with own question with invalid attributes' do
       let(:params) { attributes_for(:question, :invalid) }
 
-      before { http_request }
+      before { do_request }
 
       it 'does not change question attributes', :aggregate_failures do
         question.reload
@@ -116,7 +116,7 @@ describe QuestionsController do
     context 'with someone else\'s question' do
       let!(:question) { create(:question, user: john) }
 
-      before { http_request }
+      before { do_request }
 
       it 'does not change question attributes', :aggregate_failures do
         question.reload
@@ -134,15 +134,15 @@ describe QuestionsController do
   describe 'DELETE #destroy' do
     let!(:question) { create(:question, user: user) }
 
-    let(:http_request) { delete :destroy, params: { id: question } }
+    let(:do_request) { delete :destroy, params: { id: question } }
 
     context 'without authentication', :without_auth do
       it 'does not delete the question' do
-        expect { http_request }.not_to change(Question, :count)
+        expect { do_request }.not_to change(Question, :count)
       end
 
       it 're-renders show login view' do
-        http_request
+        do_request
 
         expect(response).to redirect_to new_user_session_path
       end
@@ -150,11 +150,11 @@ describe QuestionsController do
 
     context 'with own question' do
       it 'deletes the question' do
-        expect { http_request }.to change(Question, :count).by(-1)
+        expect { do_request }.to change(Question, :count).by(-1)
       end
 
       it 'redirects to index' do
-        http_request
+        do_request
 
         expect(response).to redirect_to questions_path
       end
@@ -164,11 +164,11 @@ describe QuestionsController do
       let!(:question) { create(:question, user: john) } # rubocop:disable RSpec/LetSetup
 
       it 'does not delete the question' do
-        expect { http_request }.not_to change(Question, :count)
+        expect { do_request }.not_to change(Question, :count)
       end
 
       it 'returns a forbidden status code' do
-        http_request
+        do_request
 
         expect(response).to have_http_status(:forbidden)
       end

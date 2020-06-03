@@ -6,15 +6,15 @@ describe FilesController do
   describe 'DELETE #destroy' do
     let!(:resource) { create(:question, :with_files, user: user) }
 
-    let(:http_request) { delete :destroy, params: { id: resource.files.first }, format: :js }
+    let(:do_request) { delete :destroy, params: { id: resource.files.first }, format: :js }
 
     context 'without authentication', :without_auth do
       it 'does not delete the file' do
-        expect { http_request }.not_to change(resource.files, :count)
+        expect { do_request }.not_to change(resource.files, :count)
       end
 
       it 'returns a unauthorized status code' do
-        http_request
+        do_request
 
         expect(response).to have_http_status(:unauthorized)
       end
@@ -22,11 +22,11 @@ describe FilesController do
 
     context 'with own resource' do
       it 'deletes the file' do
-        expect { http_request }.to change(resource.files, :count).by(-1)
+        expect { do_request }.to change(resource.files, :count).by(-1)
       end
 
       it 'renders destroy file view' do
-        http_request
+        do_request
 
         expect(response).to render_template :destroy
       end
@@ -36,11 +36,11 @@ describe FilesController do
       let!(:resource) { create(:question, :with_files, user: john) }
 
       it 'does not delete the file' do
-        expect { http_request }.not_to change(resource.files, :count)
+        expect { do_request }.not_to change(resource.files, :count)
       end
 
       it 'returns a forbidden status code' do
-        http_request
+        do_request
 
         expect(response).to have_http_status(:forbidden)
       end
