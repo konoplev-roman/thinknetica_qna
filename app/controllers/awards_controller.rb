@@ -5,7 +5,9 @@ class AwardsController < ApplicationController
   before_action :check_author!, only: :destroy
 
   def destroy
-    flash.notice = t('.success') if award.destroy
+    award.destroy!
+
+    flash.notice = t('.success')
   end
 
   private

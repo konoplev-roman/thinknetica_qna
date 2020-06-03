@@ -16,7 +16,9 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    flash.notice = t('.success') if answer.destroy
+    answer.destroy!
+
+    flash.notice = t('.success')
   end
 
   def best

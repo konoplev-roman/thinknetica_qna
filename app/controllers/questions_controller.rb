@@ -24,11 +24,9 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if question.destroy
-      redirect_to questions_path, notice: t('.success')
-    else
-      render :show
-    end
+    question.destroy!
+
+    redirect_to questions_path, notice: t('.success')
   end
 
   private
