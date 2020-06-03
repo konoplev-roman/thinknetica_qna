@@ -55,6 +55,6 @@ class QuestionsController < ApplicationController
   end
 
   def check_author!
-    redirect_to question, status: :forbidden unless current_user&.author?(question)
+    redirect_to question, status: :forbidden unless current_user.author?(question)
   end
 end

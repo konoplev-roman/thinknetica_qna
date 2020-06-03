@@ -20,6 +20,6 @@ class FilesController < ApplicationController
   helper_method :file
 
   def check_author!
-    redirect_to root_path, status: :forbidden unless current_user&.author?(file.record)
+    redirect_to root_path, status: :forbidden unless current_user.author?(file.record)
   end
 end

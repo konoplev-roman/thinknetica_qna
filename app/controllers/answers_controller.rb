@@ -43,10 +43,10 @@ class AnswersController < ApplicationController
   end
 
   def check_author!
-    redirect_to question, status: :forbidden unless current_user&.author?(answer)
+    redirect_to question, status: :forbidden unless current_user.author?(answer)
   end
 
   def check_question_author!
-    redirect_to question, status: :forbidden unless current_user&.author?(question)
+    redirect_to question, status: :forbidden unless current_user.author?(question)
   end
 end
