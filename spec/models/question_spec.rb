@@ -3,8 +3,9 @@
 require 'rails_helper'
 
 describe Question do
-  it_behaves_like 'belong to user'
   it_behaves_like 'linkable'
+
+  it { is_expected.to belong_to(:user) }
 
   it { is_expected.to have_many(:answers).order(best: :desc, created_at: :desc).dependent(:destroy) }
   it { is_expected.to have_one(:award).dependent(:destroy) }

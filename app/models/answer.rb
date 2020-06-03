@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Answer < ApplicationRecord
-  include BelongsToUser
-  include BelongsToQuestion
   include Linkable
+
+  belongs_to :question
+  belongs_to :user
 
   has_many_attached :files
 

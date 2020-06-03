@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 describe Answer do
-  it_behaves_like 'belong to user'
-  it_behaves_like 'belong to question'
   it_behaves_like 'linkable'
 
+  it { is_expected.to belong_to(:user) }
+  it { is_expected.to belong_to(:question) }
   it { is_expected.to validate_presence_of :body }
 
   it 'have many attached files' do

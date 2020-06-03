@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class Award < ApplicationRecord
-  include BelongsToQuestion
-
   belongs_to :user, optional: true
+  belongs_to :question
 
   has_one_attached :image
 

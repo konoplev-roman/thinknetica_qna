@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 describe Award do
-  it_behaves_like 'belong to user', optional: true
-  it_behaves_like 'belong to question'
+  it { is_expected.to belong_to(:user).optional }
+  it { is_expected.to belong_to(:question) }
 
   it { is_expected.to validate_presence_of :title }
   it { is_expected.to validate_attached_of(:image) }
