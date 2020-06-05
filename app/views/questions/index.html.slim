@@ -1,1 +1,4 @@
-== render questions
+- if questions.any?
+  == render questions
+- else
+  p class="text-muted text-center" = t('.no_questions')

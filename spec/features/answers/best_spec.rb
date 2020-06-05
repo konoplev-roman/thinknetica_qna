@@ -7,9 +7,8 @@ feature 'User can choose the best answer', %(
   As an authenticated user
   I'd like to be able to choose one of the answers to my question as the best
 ) do
-  given(:user) { create(:user) }
   given(:their_question) { create(:question, user: user) }
-  given(:other_question) { create(:question) }
+  given(:other_question) { create(:question, user: john) }
 
   background do
     create(:answer, question: their_question, body: 'New best answer')
@@ -18,55 +17,51 @@ feature 'User can choose the best answer', %(
     create(:answer, question: other_question)
   end
 
-  describe 'Authenticated user' do
-    background { login(user) }
+  scenario 'can choose the best answer for their question', js: true do
+    visit question_path(their_question)
 
-    scenario 'can choose the best answer for their question', js: true do
-      visit question_path(their_question)
+    # Checking the original order of answers
 
-      # Checking the original order of answers
+    within '.answers .card:nth-child(1)' do
+      expect(page).to have_content 'Old best answer'
 
-      within '.answers .card:nth-child(1)' do
-        expect(page).to have_content 'Old best answer'
-
-        expect(page).to have_content 'The question author chose this as the best answer'
-      end
-
-      within '.answers .card:nth-child(2)' do
-        expect(page).to have_content 'New best answer'
-
-        expect(page).to have_no_content 'The question author chose this as the best answer'
-
-        click_on 'Best'
-      end
-
-      # Checking that the best answer is displayed first
-
-      within '.answers .card:nth-child(1)' do
-        expect(page).to have_content 'New best answer'
-
-        expect(page).to have_content 'The question author chose this as the best answer'
-      end
-
-      within '.answers .card:nth-child(2)' do
-        expect(page).to have_content 'Old best answer'
-
-        expect(page).to have_no_content 'The question author chose this as the best answer'
-      end
-
-      expect(page).to have_content 'You have successfully chosen the best answer!'
+      expect(page).to have_content 'The question author chose this as the best answer'
     end
 
-    scenario 'does not see the link to choose the best answer for someone else\'s question' do
-      visit question_path(other_question)
+    within '.answers .card:nth-child(2)' do
+      expect(page).to have_content 'New best answer'
 
-      within '.answers' do
-        expect(page).to have_no_content 'Best'
-      end
+      expect(page).to have_no_content 'The question author chose this as the best answer'
+
+      click_on 'Best'
+    end
+
+    # Checking that the best answer is displayed first
+
+    within '.answers .card:nth-child(1)' do
+      expect(page).to have_content 'New best answer'
+
+      expect(page).to have_content 'The question author chose this as the best answer'
+    end
+
+    within '.answers .card:nth-child(2)' do
+      expect(page).to have_content 'Old best answer'
+
+      expect(page).to have_no_content 'The question author chose this as the best answer'
+    end
+
+    expect(page).to have_content 'You have successfully chosen the best answer!'
+  end
+
+  scenario 'does not see the link to choose the best answer for someone else\'s question' do
+    visit question_path(other_question)
+
+    within '.answers' do
+      expect(page).to have_no_content 'Best'
     end
   end
 
-  describe 'Guest' do
+  describe 'Guest', :without_auth do
     scenario 'does not see the link to choose the best answer' do
       visit question_path(other_question)
 

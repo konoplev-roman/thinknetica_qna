@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe LinkHelper do
+describe LinkHelper do
   describe '#link_name' do
     let(:google_link) { build(:link, name: 'google', url: 'http://google.com/') }
     let(:gist_link) { build(:link, url: 'https://gist.github.com/konoplev-roman/1152c4e0e09e1f8616c278a1a4a214a3') }

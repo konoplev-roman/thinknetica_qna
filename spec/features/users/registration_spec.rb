@@ -7,9 +7,7 @@ feature 'User can register', %(
   As an unauthenticated user
   I'd like to be able to register
 ) do
-  given(:user) { create(:user) }
-
-  describe 'Guest' do
+  describe 'Guest', :without_auth do
     scenario 'can use the registration link' do
       visit root_path
 
@@ -49,9 +47,9 @@ feature 'User can register', %(
 
         click_on 'Sign up'
 
-        expect(page).to have_current_path(user_registration_path)
-
         expect(page).to have_content 'Email can\'t be blank'
+
+        expect(page).to have_current_path(user_registration_path)
       end
 
       scenario 'without filling in the password field' do
@@ -59,9 +57,9 @@ feature 'User can register', %(
 
         click_on 'Sign up'
 
-        expect(page).to have_current_path(user_registration_path)
-
         expect(page).to have_content 'Password can\'t be blank'
+
+        expect(page).to have_current_path(user_registration_path)
       end
 
       scenario 'with a different password confirmation' do
@@ -71,9 +69,9 @@ feature 'User can register', %(
 
         click_on 'Sign up'
 
-        expect(page).to have_current_path(user_registration_path)
-
         expect(page).to have_content 'Password confirmation doesn\'t match Password'
+
+        expect(page).to have_current_path(user_registration_path)
       end
 
       scenario 'with a short password' do
@@ -81,9 +79,9 @@ feature 'User can register', %(
 
         click_on 'Sign up'
 
-        expect(page).to have_current_path(user_registration_path)
-
         expect(page).to have_content 'Password is too short (minimum is 6 characters)'
+
+        expect(page).to have_current_path(user_registration_path)
       end
 
       scenario 'with an already used email' do
@@ -91,16 +89,14 @@ feature 'User can register', %(
 
         click_on 'Sign up'
 
-        expect(page).to have_current_path(user_registration_path)
-
         expect(page).to have_content 'Email has already been taken'
+
+        expect(page).to have_current_path(user_registration_path)
       end
     end
   end
 
   describe 'Authenticated user' do
-    background { login(user) }
-
     scenario 'does not see the registration link' do
       visit root_path
 

@@ -2,33 +2,30 @@
 
 require 'rails_helper'
 
-RSpec.describe QuestionsController, type: :controller do
-  let(:user) { create(:user) }
-
+describe QuestionsController do
   describe 'POST #create' do
-    context 'without authentication' do
+    let(:do_request) { post :create, params: { question: attributes_for(:question).merge(params) } }
+    let(:params) { {} }
+
+    context 'without authentication', :without_auth do
       it 'does not save the question' do
-        expect {
-          post :create, params: { question: attributes_for(:question) }
-        }.not_to change(Question, :count)
+        expect { do_request }.not_to change(Question, :count)
       end
 
       it 're-renders show login view' do
-        post :create, params: { question: attributes_for(:question) }
+        do_request
 
         expect(response).to redirect_to new_user_session_path
       end
     end
 
     context 'with valid attributes' do
-      before { login(user) }
-
       it 'saves a new question in the database' do
-        expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
+        expect { do_request }.to change(Question, :count).by(1)
       end
 
       it 'saves a new question nested to the current user' do
-        post :create, params: { question: attributes_for(:question) }
+        do_request
 
         created_question = Question.order(id: :desc).first
 
@@ -36,7 +33,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'redirects to show view' do
-        post :create, params: { question: attributes_for(:question) }
+        do_request
 
         created_question = Question.order(id: :desc).first
 
@@ -45,16 +42,14 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with invalid attributes' do
-      before { login(user) }
+      let(:params) { attributes_for(:question, :invalid) }
 
       it 'does not save the question' do
-        expect {
-          post :create, params: { question: attributes_for(:question, :invalid) }
-        }.not_to change(Question, :count)
+        expect { do_request }.not_to change(Question, :count)
       end
 
       it 're-renders new view' do
-        post :create, params: { question: attributes_for(:question, :invalid) }
+        do_request
 
         expect(response).to render_template :new
       end
@@ -62,22 +57,22 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    context 'without authentication' do
-      let!(:question) { create(:question) }
+    let!(:question) { create(:question, user: user) }
 
-      before do
-        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
-      end
+    let(:do_request) do
+      patch :update,
+            params: { id: question, question: { title: 'new title', body: 'new body' }.merge(params) },
+            format: :js
+    end
+    let(:params) { {} }
 
-      it 'does not change question attribute title' do
+    context 'without authentication', :without_auth do
+      before { do_request }
+
+      it 'does not change question attributes', :aggregate_failures do
         question.reload
 
         expect(question.title).to eq('MyString')
-      end
-
-      it 'does not change question attribute body' do
-        question.reload
-
         expect(question.body).to eq('MyText')
       end
 
@@ -87,23 +82,12 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with own question with valid attributes' do
-      let!(:question) { create(:question, user: user) }
+      before { do_request }
 
-      before do
-        login(user)
-
-        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
-      end
-
-      it 'changes question attribute title' do
+      it 'changes question attributes', :aggregate_failures do
         question.reload
 
         expect(question.title).to eq('new title')
-      end
-
-      it 'changes question attribute body' do
-        question.reload
-
         expect(question.body).to eq('new body')
       end
 
@@ -113,23 +97,14 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with own question with invalid attributes' do
-      let!(:question) { create(:question, user: user) }
+      let(:params) { attributes_for(:question, :invalid) }
 
-      before do
-        login(user)
+      before { do_request }
 
-        patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
-      end
-
-      it 'does not change question attribute title' do
+      it 'does not change question attributes', :aggregate_failures do
         question.reload
 
         expect(question.title).to eq('MyString')
-      end
-
-      it 'does not change question attribute body' do
-        question.reload
-
         expect(question.body).to eq('MyText')
       end
 
@@ -139,23 +114,14 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with someone else\'s question' do
-      let!(:question) { create(:question) }
+      let!(:question) { create(:question, user: john) }
 
-      before do
-        login(user)
+      before { do_request }
 
-        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
-      end
-
-      it 'does not change question attribute title' do
+      it 'does not change question attributes', :aggregate_failures do
         question.reload
 
         expect(question.title).to eq('MyString')
-      end
-
-      it 'does not change question attribute body' do
-        question.reload
-
         expect(question.body).to eq('MyText')
       end
 
@@ -166,47 +132,43 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    context 'without authentication' do
-      let!(:question) { create(:question) }
+    let!(:question) { create(:question, user: user) }
 
+    let(:do_request) { delete :destroy, params: { id: question } }
+
+    context 'without authentication', :without_auth do
       it 'does not delete the question' do
-        expect { delete :destroy, params: { id: question } }.not_to change(Question, :count)
+        expect { do_request }.not_to change(Question, :count)
       end
 
       it 're-renders show login view' do
-        delete :destroy, params: { id: question }
+        do_request
 
         expect(response).to redirect_to new_user_session_path
       end
     end
 
     context 'with own question' do
-      before { login(user) }
-
-      let!(:question) { create(:question, user: user) }
-
       it 'deletes the question' do
-        expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
+        expect { do_request }.to change(Question, :count).by(-1)
       end
 
       it 'redirects to index' do
-        delete :destroy, params: { id: question }
+        do_request
 
         expect(response).to redirect_to questions_path
       end
     end
 
     context 'with someone else\'s question' do
-      before { login(user) }
-
-      let!(:question) { create(:question) }
+      let!(:question) { create(:question, user: john) } # rubocop:disable RSpec/LetSetup
 
       it 'does not delete the question' do
-        expect { delete :destroy, params: { id: question } }.not_to change(Question, :count)
+        expect { do_request }.not_to change(Question, :count)
       end
 
       it 'returns a forbidden status code' do
-        delete :destroy, params: { id: question }
+        do_request
 
         expect(response).to have_http_status(:forbidden)
       end

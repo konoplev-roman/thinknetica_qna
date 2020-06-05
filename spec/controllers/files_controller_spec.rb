@@ -2,57 +2,45 @@
 
 require 'rails_helper'
 
-RSpec.describe FilesController, type: :controller do
-  let(:user) { create(:user) }
-
+describe FilesController do
   describe 'DELETE #destroy' do
-    context 'without authentication' do
-      let!(:resource) { create(:question, :with_files) }
+    let!(:resource) { create(:question, :with_files, user: user) }
 
+    let(:do_request) { delete :destroy, params: { id: resource.files.first }, format: :js }
+
+    context 'without authentication', :without_auth do
       it 'does not delete the file' do
-        expect {
-          delete :destroy, params: { id: resource.files.first }, format: :js
-        }.not_to change(resource.files, :count)
+        expect { do_request }.not_to change(resource.files, :count)
       end
 
       it 'returns a unauthorized status code' do
-        delete :destroy, params: { id: resource.files.first }, format: :js
+        do_request
 
         expect(response).to have_http_status(:unauthorized)
       end
     end
 
     context 'with own resource' do
-      before { login(user) }
-
-      let!(:resource) { create(:question, :with_files, user: user) }
-
       it 'deletes the file' do
-        expect {
-          delete :destroy, params: { id: resource.files.first }, format: :js
-        }.to change(resource.files, :count).by(-1)
+        expect { do_request }.to change(resource.files, :count).by(-1)
       end
 
       it 'renders destroy file view' do
-        delete :destroy, params: { id: resource.files.first }, format: :js
+        do_request
 
         expect(response).to render_template :destroy
       end
     end
 
     context 'with someone else\'s resource' do
-      before { login(user) }
-
-      let!(:resource) { create(:question, :with_files) }
+      let!(:resource) { create(:question, :with_files, user: john) }
 
       it 'does not delete the file' do
-        expect {
-          delete :destroy, params: { id: resource.files.first }, format: :js
-        }.not_to change(resource.files, :count)
+        expect { do_request }.not_to change(resource.files, :count)
       end
 
       it 'returns a forbidden status code' do
-        delete :destroy, params: { id: resource.files.first }, format: :js
+        do_request
 
         expect(response).to have_http_status(:forbidden)
       end
