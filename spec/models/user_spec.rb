@@ -8,6 +8,7 @@ describe User do
   it { is_expected.to have_many(:questions).dependent(:destroy) }
   it { is_expected.to have_many(:answers).dependent(:destroy) }
   it { is_expected.to have_many(:awards).dependent(:nullify) }
+  it { is_expected.to have_many(:votes).dependent(:destroy) }
 
   describe '#author?' do
     let(:user) { create(:user) }
