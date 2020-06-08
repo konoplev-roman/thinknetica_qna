@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 describe QuestionsController do
+  it_behaves_like 'voted'
+
   describe 'POST #create' do
     let(:do_request) { post :create, params: { question: attributes_for(:question).merge(params) } }
     let(:params) { {} }

@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, only: %i[new create update destroy]
+  before_action :authenticate_user!, except: %i[index show]
   before_action :check_author!, only: %i[update destroy]
 
+  include Voted
+
   # This is a stub, used for indexing in before_action :authenticate_user!
-  def new; end
+  def index; end
+
+  # This is a stub, used for indexing in before_action :authenticate_user!
+  def show; end
 
   def create
     question.assign_attributes(question_params)

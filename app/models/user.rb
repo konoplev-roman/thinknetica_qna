@@ -9,8 +9,13 @@ class User < ApplicationRecord
   has_many :questions, dependent: :destroy
   has_many :answers, dependent: :destroy
   has_many :awards, dependent: :nullify
+  has_many :votes, dependent: :destroy
 
   def author?(resource)
     resource.user_id == id
+  end
+
+  def voted?(resource)
+    resource.votes.find_by(user_id: id).present?
   end
 end

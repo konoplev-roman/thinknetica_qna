@@ -4,6 +4,7 @@ require 'rails_helper'
 
 describe Answer do
   it_behaves_like 'linkable'
+  it_behaves_like 'voteable'
 
   it { is_expected.to belong_to(:user) }
   it { is_expected.to belong_to(:question) }

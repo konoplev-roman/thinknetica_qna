@@ -5,6 +5,8 @@ class AnswersController < ApplicationController
   before_action :check_author!, only: %i[update destroy]
   before_action :check_question_author!, only: %i[best]
 
+  include Voted
+
   def create
     answer.user = current_user
 

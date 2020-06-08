@@ -14,6 +14,7 @@ Style/Documentation:
 Metrics/BlockLength:
   ExcludedMethods:
     - 'describe'
+    - 'shared_examples_for'
 Style/BlockDelimiters:
   EnforcedStyle: braces_for_chaining
 Capybara/FeatureMethods:

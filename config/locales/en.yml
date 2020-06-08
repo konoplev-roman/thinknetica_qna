@@ -14,6 +14,9 @@ en:
       award:
         one: "Award"
         other: "Awards"
+      vote:
+        one: "Vote"
+        other: "Votes"
     attributes:
       question:
         title: "Title"
@@ -26,6 +29,14 @@ en:
       award:
         title: "Award title"
         image: "Award image"
+      vote:
+        value: "Value"
+    errors:
+      models:
+        vote:
+          attributes:
+            voteable:
+              own_resource: "cannot be taken for its own resource"
   helpers:
     submit:
       question:
@@ -105,3 +116,7 @@ en:
   are_you_sure: "Are you sure?"
   award:
     best_answer: "You have appointed an award for the best answer"
+  vote:
+    success: "Your vote is accepted!"
+    canceled: "Your vote was canceled!"
+    not_found: "Vote not found!"

@@ -2,6 +2,7 @@
 
 class Question < ApplicationRecord
   include Linkable
+  include Voteable
 
   belongs_to :user
 
