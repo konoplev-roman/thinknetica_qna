@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
-  include Voted
-
   before_action :authenticate_user!, except: %i[index show]
   before_action :check_author!, only: %i[update destroy]
+
+  include Voted
 
   # This is a stub, used for indexing in before_action :authenticate_user!
   def index; end
