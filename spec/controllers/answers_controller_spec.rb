@@ -5,6 +5,8 @@ require 'rails_helper'
 describe AnswersController do
   let(:question) { create(:question, user: john) }
 
+  it_behaves_like 'voted'
+
   describe 'POST #create' do
     let(:do_request) do
       post :create,

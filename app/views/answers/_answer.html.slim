@@ -3,6 +3,8 @@ div id="answer-#{answer.id}" class="card mb-3 #{'border-warning' if answer.best?
     div class='d-flex'
       p class='card-text mr-auto' = answer.body
 
+      == render 'votes/rating', resource: answer
+
       - if current_user&.author?(question)
         p class='ml-2' = link_to t('.best'), best_answer_path(answer), \
                          method: :patch, data: { answer_id: answer.id }, remote: true, \

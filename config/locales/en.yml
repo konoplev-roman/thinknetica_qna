@@ -36,7 +36,7 @@ en:
         vote:
           attributes:
             voteable:
-              own_resource: "You can't vote for your own resource."
+              own_resource: "cannot be taken for its own resource"
   helpers:
     submit:
       question:
@@ -116,3 +116,7 @@ en:
   are_you_sure: "Are you sure?"
   award:
     best_answer: "You have appointed an award for the best answer"
+  vote:
+    success: "Your vote is accepted!"
+    canceled: "Your vote was canceled!"
+    not_found: "Vote not found!"
